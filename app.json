@@ -1,12 +1,35 @@
 {
   "expo": {
-    "extra": {
-      "eas": {
-        "projectId": "c3539518-5218-47c3-bb5d-3e9e9e5a91a4"
-      }
+    "name": "DIMEX",
+    "slug": "snack-6410b457-cf14-45cd-af0b-1ce416e5d75e",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
     },
     "android": {
-      "package": "com.marcio.bastos.relatoriodesobrastemporario"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.marcio.schuenk.snack6410b457cf1445cdaf0b1ce416e5d75e"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "20828e8e-dbdc-495b-8295-732ecc754c31"
+      }
     }
   }
 }
