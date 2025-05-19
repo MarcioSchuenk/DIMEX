@@ -2,17 +2,13 @@ import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, StatusBar, Linking } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function HomeScreen({ navigation }) {
+export default function SeparaçaodeCarrinhos({ navigation }) {
   const handleOpenForm = () => {
     Linking.openURL('https://forms.gle/gC6cSvuYmwMBm1eW8');
   };
 
-  const handleOpenCarregamentoForm = () => {
-    Linking.openURL('https://forms.gle/e96SPgm4JqNE6sPUA');
-  };
-
-  const handleOpenSalaNobreForm = () => {
-    Linking.openURL('https://forms.gle/7WUcSYFUDcNqK8Vu9');
+  const handleOpenAnalytics = () => {
+    Linking.openURL('https://www.deepseek.com'); // IP da sua rede interna
   };
 
   return (
@@ -23,30 +19,31 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       <View style={styles.cardsContainer}>
+        {/* Seus cards existentes aqui... */}
         <TouchableOpacity
           style={styles.card}
-          onPress={handleOpenCarregamentoForm}
+          onPress={() => navigation.navigate('SobrasCarregamento')}
         >
           <View style={styles.iconContainer}>
             <MaterialIcons name="local-shipping" size={28} color="#FFFFFF" />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.cardText}>Sobras de Carregamento</Text>
-            <Text style={styles.cardSubtext}>Acessar formulário de sobras</Text>
+            <Text style={styles.cardSubtext}>Registrar no app</Text>
           </View>
           <MaterialIcons name="chevron-right" size={24} color="#E8F5E9" />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.card}
-          onPress={handleOpenSalaNobreForm}
+          onPress={() => navigation.navigate('SobrasSalaNobre')}
         >
           <View style={styles.iconContainer}>
             <MaterialIcons name="meeting-room" size={28} color="#FFFFFF" />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.cardText}>Sobras da Sala Nobre</Text>
-            <Text style={styles.cardSubtext}>Acessar formulário de sobras</Text>
+            <Text style={styles.cardSubtext}>Registrar no app</Text>
           </View>
           <MaterialIcons name="chevron-right" size={24} color="#E8F5E9" />
         </TouchableOpacity>
@@ -65,6 +62,15 @@ export default function HomeScreen({ navigation }) {
           <MaterialIcons name="chevron-right" size={24} color="#E8F5E9" />
         </TouchableOpacity>
       </View>
+
+      {/* Botão de Analytics fixo no canto inferior esquerdo */}
+      <TouchableOpacity 
+        style={styles.analyticsButton} 
+        onPress={handleOpenAnalytics}
+      >
+        <MaterialIcons name="analytics" size={24} color="#FFFFFF" style={styles.analyticsIcon} />
+        <Text style={styles.analyticsButtonText}>WEB PAGE ANALYTICS</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -88,6 +94,8 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     width: '100%',
+    flex: 1,
+    marginBottom: 70, // Espaço para o botão fixo
   },
   card: {
     flexDirection: 'row',
@@ -127,5 +135,30 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#757575',
     marginTop: 4,
+  },
+  analyticsButton: {
+    position: 'absolute',
+    left: 24,
+    bottom: 24,
+    backgroundColor: '#4CAF50', // Mesma cor verde dos outros botões
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#1B5E20',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  analyticsButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+    fontSize: 17,
+    marginLeft: 8,
+  },
+  analyticsIcon: {
+    marginRight: 1,
   },
 });
