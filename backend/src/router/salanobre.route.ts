@@ -8,6 +8,7 @@ export const salaNobreRoutes = Router();
 const salaNobreControllers = new SalaNobreController();
 
 salaNobreRoutes.post("/", IsValidBody.execute({ body: createCaixasSchema}), salaNobreControllers.createCaixas);
+salaNobreRoutes.get("/", salaNobreControllers.getCaixas);
 
 
 

@@ -11,4 +11,15 @@ export class SalaNobreController {
 
     res.status(201).json(response);
   }
+
+  async getCaixas(req: Request, res: Response): Promise<void> {
+    const salaNobreServices = container.resolve(SalaNobreServices);
+    
+    const { dia, mesAno } = req.body;
+
+
+    const response = await salaNobreServices.getCaixas({ dia, mesAno });
+
+    res.status(200).json(response);
+  }
 }
