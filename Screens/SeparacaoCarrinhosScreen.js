@@ -3,22 +3,11 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert 
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function FormularioPedidosScreen() {
-  const initialFormState = {
-    codigoSeparador: '',
-    pedido01: '',
-    pedido02: '',
-    pedido03: '',
-    pedido04: ''
-  };
-
-  const [formData, setFormData] = useState(initialFormState);
-  const [errors, setErrors] = useState({
-    codigoSeparador: false,
-    pedido01: false,
-    pedido02: false,
-    pedido03: false,
-    pedido04: false
-  });
+  const [codigoSeparador, setCodigoSeparador] = useState('');
+  const [codigoSeparadorError, setCodigoSeparadorError] = useState(false);
+  
+  // Array para gerenciar pedidos dinamicamente
+  const [pedidos, setPedidos] = useState([{ id: 1, valor: '', hasError: false }]);
 
   // Valida se o valor contém apenas números
   const validateNumber = (value) => {
@@ -35,71 +24,104 @@ export default function FormularioPedidosScreen() {
     return value.length === 6;
   };
 
-  const handleChange = (field, value) => {
-    if ((field === 'codigoSeparador' || field.startsWith('pedido')) && value !== '' && !validateNumber(value)) {
+  const handleCodigoSeparadorChange = (value) => {
+    if (value !== '' && !validateNumber(value)) {
       return;
     }
     
-    setFormData(prev => ({...prev, [field]: value}));
+    setCodigoSeparador(value);
     
-    if (errors[field] && value) {
-      setErrors(prev => ({...prev, [field]: false}));
+    if (codigoSeparadorError && value.length === 6) {
+      setCodigoSeparadorError(false);
     }
   };
 
+  const handlePedidoChange = (id, value) => {
+    if (value !== '' && !validateNumber(value)) {
+      return;
+    }
+    
+    const updatedPedidos = pedidos.map(pedido => {
+      if (pedido.id === id) {
+        const hasError = value !== '' && !validatePedidoLength(value);
+        return { ...pedido, valor: value, hasError };
+      }
+      return pedido;
+    });
+    
+    setPedidos(updatedPedidos);
+  };
+
+  const adicionarPedido = () => {
+    // Não permitir adicionar mais do que 5 pedidos
+    if (pedidos.length >= 5) return;
+    
+    // Encontrar o maior ID atual para garantir que o novo ID seja sempre único
+    const maxId = Math.max(...pedidos.map(p => p.id), 0);
+    setPedidos([...pedidos, { id: maxId + 1, valor: '', hasError: false }]);
+  };
+
+  const removerPedido = (id) => {
+    // Não permitir remover o primeiro pedido
+    if (pedidos.length === 1) {
+      return;
+    }
+    
+    const updatedPedidos = pedidos.filter(pedido => pedido.id !== id);
+    setPedidos(updatedPedidos);
+  };
+
   const validateForm = () => {
-    const newErrors = {
-      codigoSeparador: !formData.codigoSeparador || !validateCodigoSeparadorLength(formData.codigoSeparador),
-      pedido01: !formData.pedido01 || !validatePedidoLength(formData.pedido01),
-      pedido02: formData.pedido02 !== '' && !validatePedidoLength(formData.pedido02),
-      pedido03: formData.pedido03 !== '' && !validatePedidoLength(formData.pedido03),
-      pedido04: formData.pedido04 !== '' && !validatePedidoLength(formData.pedido04)
-    };
+    // Validar código do separador
+    const codigoInvalido = !codigoSeparador || !validateCodigoSeparadorLength(codigoSeparador);
+    setCodigoSeparadorError(codigoInvalido);
     
-    setErrors(newErrors);
+    // Validar pedidos
+    let pedidosValidos = true;
+    const updatedPedidos = pedidos.map((pedido, index) => {
+      // O primeiro pedido é obrigatório
+      const isRequired = index === 0;
+      const isEmpty = pedido.valor.length === 0;
+      const hasError = (isRequired && isEmpty) || (pedido.valor && !validatePedidoLength(pedido.valor));
+      
+      if (hasError) {
+        pedidosValidos = false;
+      }
+      
+      return { ...pedido, hasError };
+    });
     
-    return !newErrors.codigoSeparador && 
-           !newErrors.pedido01 && 
-           !newErrors.pedido02 && 
-           !newErrors.pedido03 && 
-           !newErrors.pedido04;
+    setPedidos(updatedPedidos);
+    
+    return !codigoInvalido && pedidosValidos;
   };
 
   const resetForm = () => {
-    setFormData(initialFormState);
-    setErrors({
-      codigoSeparador: false,
-      pedido01: false,
-      pedido02: false,
-      pedido03: false,
-      pedido04: false
-    });
+    setCodigoSeparador('');
+    setCodigoSeparadorError(false);
+    setPedidos([{ id: 1, valor: '', hasError: false }]);
   };
 
   const handleSubmit = () => {
     if (!validateForm()) {
       let errorMessage = '';
       
-      if (!formData.codigoSeparador) {
+      if (!codigoSeparador) {
         errorMessage += '• Código do Separador é obrigatório\n';
-      } else if (!validateCodigoSeparadorLength(formData.codigoSeparador)) {
+      } else if (!validateCodigoSeparadorLength(codigoSeparador)) {
         errorMessage += '• Código do Separador deve ter exatamente 6 dígitos\n';
       }
-      if (!formData.pedido01) {
-        errorMessage += '• Pedido 01 é obrigatório\n';
-      }
-      if (formData.pedido01 && !validatePedidoLength(formData.pedido01)) {
-        errorMessage += '• Pedido 01 deve ter exatamente 7 dígitos\n';
-      }
-      if (formData.pedido02 && !validatePedidoLength(formData.pedido02)) {
-        errorMessage += '• Pedido 02 deve ter exatamente 7 dígitos\n';
-      }
-      if (formData.pedido03 && !validatePedidoLength(formData.pedido03)) {
-        errorMessage += '• Pedido 03 deve ter exatamente 7 dígitos\n';
-      }
-      if (formData.pedido04 && !validatePedidoLength(formData.pedido04)) {
-        errorMessage += '• Pedido 04 deve ter exatamente 7 dígitos\n';
-      }
+      
+      // Verificar erros nos pedidos
+      pedidos.forEach((pedido, index) => {
+        const pedidoNum = index + 1;
+        if (index === 0 && pedido.valor.length === 0) {
+          errorMessage += `• Pedido 01 é obrigatório\n`;
+        }
+        if (pedido.valor && !validatePedidoLength(pedido.valor)) {
+          errorMessage += `• Pedido ${String(pedidoNum).padStart(2, '0')} deve ter exatamente 7 dígitos\n`;
+        }
+      });
 
       Alert.alert(
         'Erros no formulário',
@@ -108,6 +130,12 @@ export default function FormularioPedidosScreen() {
       );
       return;
     }
+
+    // Criar objeto para envio com os dados
+    const formData = {
+      codigoSeparador,
+      pedidos: pedidos.map(p => p.valor).filter(v => v !== '')
+    };
 
     console.log('Dados enviados:', formData);
     Alert.alert('Sucesso', 'Pedidos enviados com sucesso!', [
@@ -128,122 +156,81 @@ export default function FormularioPedidosScreen() {
           <Text style={styles.label}>Código do Separador *</Text>
           <View style={[
             styles.inputContainer, 
-            errors.codigoSeparador && styles.inputError
+            codigoSeparadorError && styles.inputError
           ]}>
             <MaterialIcons name="person-pin" size={20} color="#4CAF50" style={styles.inputIcon} />
             <TextInput
               style={styles.input}
-              value={formData.codigoSeparador}
-              onChangeText={(text) => handleChange('codigoSeparador', text)}
-              placeholder="Digite o codigo do separador (6 dígitos)"
+              value={codigoSeparador}
+              onChangeText={handleCodigoSeparadorChange}
+              placeholder="Digite o código do separador (6 dígitos)"
               placeholderTextColor="#9E9E9E"
               keyboardType="numeric"
               maxLength={6}
             />
           </View>
-          {errors.codigoSeparador && (
+          {codigoSeparadorError && (
             <Text style={styles.errorText}>
-              {formData.codigoSeparador.length === 0 
+              {codigoSeparador.length === 0 
                 ? 'Este campo é obrigatório' 
                 : 'O código deve ter exatamente 6 dígitos'}
             </Text>
           )}
         </View>
 
-        {/* Campo Pedido 01 */}
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Pedido 01 *</Text>
-          <View style={[
-            styles.inputContainer, 
-            (errors.pedido01 || (formData.pedido01 && !validatePedidoLength(formData.pedido01))) && styles.inputError
-          ]}>
-            <MaterialIcons name="shopping-cart" size={20} color="#4CAF50" style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              value={formData.pedido01}
-              onChangeText={(text) => handleChange('pedido01', text)}
-              placeholder="Bipe o número do pedido (7 dígitos)"
-              placeholderTextColor="#9E9E9E"
-              keyboardType="numeric"
-              maxLength={7}
-            />
-          </View>
-          {errors.pedido01 && (
-            <Text style={styles.errorText}>Este campo é obrigatório</Text>
-          )}
-          {formData.pedido01 && !validatePedidoLength(formData.pedido01) && (
-            <Text style={styles.errorText}>O pedido deve ter exatamente 7 dígitos</Text>
-          )}
-        </View>
+        {/* Campos de Pedido Dinâmicos */}
+        {pedidos.map((pedido, index) => (
+          <View key={pedido.id} style={styles.formGroup}>
+            <View style={styles.pedidoLabelContainer}>
+              <Text style={styles.label}>
+                Pedido {String(index + 1).padStart(2, '0')} {index === 0 ? '*' : ''}
+              </Text>
+              {index > 0 && (
+                
+                <TouchableOpacity 
+                  onPress={() => removerPedido(pedido.id)}
+                  style={styles.removerPedidoButton}
+                >
+                  <MaterialIcons name="remove-circle" size={25} color="#F44336" />
+                </TouchableOpacity>
 
-        {/* Campo Pedido 02 */}
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Pedido 02</Text>
-          <View style={[
-            styles.inputContainer, 
-            (formData.pedido02 && !validatePedidoLength(formData.pedido02)) && styles.inputError
-          ]}>
-            <MaterialIcons name="shopping-cart" size={20} color="#4CAF50" style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              value={formData.pedido02}
-              onChangeText={(text) => handleChange('pedido02', text)}
-              placeholder="Bipe o número do pedido (7 dígitos)"
-              placeholderTextColor="#9E9E9E"
-              keyboardType="numeric"
-              maxLength={7}
-            />
+              )}
+            </View>
+            <View style={[
+              styles.inputContainer, 
+              pedido.hasError && styles.inputError
+            ]}>
+              <MaterialIcons name="shopping-cart" size={20} color="#4CAF50" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                value={pedido.valor}
+                onChangeText={(text) => handlePedidoChange(pedido.id, text)}
+                placeholder="Bipe o número do pedido (7 dígitos)"
+                placeholderTextColor="#9E9E9E"
+                keyboardType="numeric"
+                maxLength={7}
+              />
+            </View>
+            {pedido.hasError && (
+              <Text style={styles.errorText}>
+                {index === 0 && pedido.valor.length === 0
+                  ? 'Este campo é obrigatório'
+                  : 'O pedido deve ter exatamente 7 dígitos'}
+              </Text>
+            )}
           </View>
-          {formData.pedido02 && !validatePedidoLength(formData.pedido02) && (
-            <Text style={styles.errorText}>O pedido deve ter exatamente 7 dígitos</Text>
-          )}
-        </View>
+        ))}
 
-        {/* Campo Pedido 03 */}
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Pedido 03</Text>
-          <View style={[
-            styles.inputContainer, 
-            (formData.pedido03 && !validatePedidoLength(formData.pedido03)) && styles.inputError
-          ]}>
-            <MaterialIcons name="shopping-cart" size={20} color="#4CAF50" style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              value={formData.pedido03}
-              onChangeText={(text) => handleChange('pedido03', text)}
-              placeholder="Bipe o número do pedido (7 dígitos)"
-              placeholderTextColor="#9E9E9E"
-              keyboardType="numeric"
-              maxLength={7}
-            />
-          </View>
-          {formData.pedido03 && !validatePedidoLength(formData.pedido03) && (
-            <Text style={styles.errorText}>O pedido deve ter exatamente 7 dígitos</Text>
-          )}
-        </View>
-
-        {/* Campo Pedido 04 */}
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Pedido 04</Text>
-          <View style={[
-            styles.inputContainer, 
-            (formData.pedido04 && !validatePedidoLength(formData.pedido04)) && styles.inputError
-          ]}>
-            <MaterialIcons name="shopping-cart" size={20} color="#4CAF50" style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              value={formData.pedido04}
-              onChangeText={(text) => handleChange('pedido04', text)}
-              placeholder="Bipe o número do pedido (7 dígitos)"
-              placeholderTextColor="#9E9E9E"
-              keyboardType="numeric"
-              maxLength={7}
-            />
-          </View>
-          {formData.pedido04 && !validatePedidoLength(formData.pedido04) && (
-            <Text style={styles.errorText}>O pedido deve ter exatamente 7 dígitos</Text>
-          )}
-        </View>
+        {/* Botão para adicionar novo pedido - desaparece ao atingir 5 pedidos */}
+        {pedidos.length < 5 && (
+          <TouchableOpacity 
+            style={styles.addButton} 
+            onPress={adicionarPedido}
+          >
+            <MaterialIcons name="add-circle" size={24} color="#4CAF50" />
+            <Text style={styles.addButtonText}>Adicionar Pedido</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Botão de Envio */}
@@ -282,10 +269,15 @@ const styles = StyleSheet.create({
   formGroup: {
     marginBottom: 20,
   },
+  pedidoLabelContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   label: {
     fontSize: 14,
     fontWeight: '600',
-    marginBottom: 8,
     color: '#424242',
     marginLeft: 8,
   },
@@ -310,6 +302,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#212121',
     includeFontPadding: false,
+  },
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 12,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: '#4CAF50',
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  addButtonText: {
+    marginLeft: 8,
+    color: '#4CAF50',
+    fontWeight: '600',
+  },
+  removerPedidoButton: {
+    padding: 4,
   },
   submitButton: {
     flexDirection: 'row',
