@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "8cdda521-4839-4d25-b32e-4d03990841ec"
+      }
+    },
+    "android": {
+      "package": "com.marcio.bastos.backend"
+    }
+  }
+}

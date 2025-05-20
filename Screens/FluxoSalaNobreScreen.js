@@ -1,69 +1,99 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Alert,
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import axios from "axios";
 
 export default function FluxoSalaNobreScreen() {
-  const [codigoCaixa, setCodigoCaixa] = useState('');
-  const [error, setError] = useState('');
+  const [codigoCaixa, setCodigoCaixa] = useState("");
+  const [error, setError] = useState("");
+  const API_URL = "http://192.168.10.52:3000/caixas";
 
   const validateCodigoCaixa = (text) => {
     // Converte para maiúsculas automaticamente
     const upperText = text.toUpperCase();
-    
+
     // Verifica se começa com CX
-    if (upperText && !upperText.startsWith('CX')) {
+    if (upperText && !upperText.startsWith("CX")) {
       setError('O código deve começar com "CX"');
-    } 
+    }
     // Verifica o comprimento
     else if (upperText.length > 8) {
-      setError('O código deve ter exatamente 8 caracteres');
+      setError("O código deve ter exatamente 8 caracteres");
     }
     // Verifica caracteres válidos (apenas letras e números)
     else if (!/^[A-Z0-9]*$/.test(upperText)) {
-      setError('Apenas letras e números são permitidos');
+      setError("Apenas letras e números são permitidos");
     } else {
-      setError('');
+      setError("");
     }
-    
+
     setCodigoCaixa(upperText);
   };
 
-  const handleSubmit = () => {
-    if (codigoCaixa.trim() === '') {
-      Alert.alert('Erro', 'Por favor, insira o código da caixa');
-      return;
-    }
-    
-    if (codigoCaixa.length !== 8) {
-      Alert.alert('Erro', 'O código deve ter exatamente 8 caracteres');
-      return;
-    }
-    
-    if (!codigoCaixa.startsWith('CX')) {
-      Alert.alert('Erro', 'O código deve começar com "CX"');
-      return;
-    }
-    
-    if (!/^[A-Z0-9]+$/.test(codigoCaixa)) {
-      Alert.alert('Erro', 'Apenas letras maiúsculas e números são permitidos');
+  const handleSubmit = async () => {
+    if (codigoCaixa.trim() === "") {
+      Alert.alert("Erro", "Por favor, insira o código da caixa");
       return;
     }
 
-    console.log('Código da caixa enviado:', codigoCaixa);
-    Alert.alert('Sucesso', 'Código registrado com sucesso!');
-    setCodigoCaixa('');
-    setError('');
+    if (codigoCaixa.length !== 8) {
+      Alert.alert("Erro", "O código deve ter exatamente 8 caracteres");
+      return;
+    }
+
+    if (!codigoCaixa.startsWith("CX")) {
+      Alert.alert("Erro", 'O código deve começar com "CX"');
+      return;
+    }
+
+    if (!/^[A-Z0-9]+$/.test(codigoCaixa)) {
+      Alert.alert("Erro", "Apenas letras maiúsculas e números são permitidos");
+      return;
+    }
+
+    console.log("Código da caixa enviado:", codigoCaixa);
+    Alert.alert("Sucesso", "Código registrado com sucesso!");
+    setCodigoCaixa("");
+    setError("");
+
+    // Aqui você pode fazer a chamada para a API
+    try {
+      await axios.post(API_URL, {
+        codigo: codigoCaixa,
+      });
+      Alert.alert("Sucesso", "Código registrado com sucesso!");
+    } catch (error) {
+      Alert.alert(
+        "Erro",
+        "Não foi possível registrar o código. Verifique a conexão ou fale com o suporte."
+      );
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Registro de Fluxo - Sala Nobre</Text>
-      
+
       <View style={styles.card}>
         <View style={styles.formGroup}>
           <Text style={styles.label}>Código da Caixa *</Text>
-          <View style={[styles.inputContainer, error ? styles.inputError : null]}>
-            <MaterialIcons name="qr-code" size={20} color="#4CAF50" style={styles.inputIcon} />
+          <View
+            style={[styles.inputContainer, error ? styles.inputError : null]}
+          >
+            <MaterialIcons
+              name="qr-code"
+              size={20}
+              color="#4CAF50"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               value={codigoCaixa}
@@ -81,7 +111,12 @@ export default function FluxoSalaNobreScreen() {
 
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>ENVIAR</Text>
-        <MaterialIcons name="send" size={20} color="#FFFFFF" style={styles.buttonIcon} />
+        <MaterialIcons
+          name="send"
+          size={20}
+          color="#FFFFFF"
+          style={styles.buttonIcon}
+        />
       </TouchableOpacity>
     </ScrollView>
   );
@@ -91,22 +126,22 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 16,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   header: {
     fontSize: 22,
-    fontWeight: '700',
-    color: '#2E7D32',
+    fontWeight: "700",
+    color: "#2E7D32",
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 20,
     marginBottom: 20,
     elevation: 2,
-    shadowColor: '#1B5E2040',
+    shadowColor: "#1B5E2040",
     shadowOpacity: 0.1,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
@@ -116,23 +151,23 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
-    color: '#424242',
+    color: "#424242",
     marginLeft: 8,
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: "#E0E0E0",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 14,
   },
   inputError: {
-    borderColor: '#F44336',
+    borderColor: "#F44336",
   },
   inputIcon: {
     marginRight: 10,
@@ -140,33 +175,33 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#212121',
+    color: "#212121",
     includeFontPadding: false,
   },
   submitButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#4CAF50',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#4CAF50",
     padding: 16,
     borderRadius: 8,
     elevation: 3,
-    shadowColor: '#2E7D32',
+    shadowColor: "#2E7D32",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
   },
   submitButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginRight: 8,
   },
   buttonIcon: {
     marginLeft: 8,
   },
   errorText: {
-    color: '#F44336',
+    color: "#F44336",
     fontSize: 12,
     marginTop: 4,
     marginLeft: 8,
