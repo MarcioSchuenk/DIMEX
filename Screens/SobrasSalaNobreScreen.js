@@ -129,7 +129,7 @@ export default function SobrasSalaNobreScreen() {
       </View>
 
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>SALVAR SOBRA</Text>
+        <Text style={styles.submitButtonText}>SALVAR</Text>
         <MaterialIcons name="save" size={20} color="#FFFFFF" style={styles.buttonIcon} />
       </TouchableOpacity>
     </ScrollView>

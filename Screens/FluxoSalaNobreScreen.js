@@ -1,18 +1,58 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function FluxoSalaNobreScreen() {
   const [codigoCaixa, setCodigoCaixa] = useState('');
+  const [error, setError] = useState('');
+
+  const validateCodigoCaixa = (text) => {
+    // Converte para maiúsculas automaticamente
+    const upperText = text.toUpperCase();
+    
+    // Verifica se começa com CX
+    if (upperText && !upperText.startsWith('CX')) {
+      setError('O código deve começar com "CX"');
+    } 
+    // Verifica o comprimento
+    else if (upperText.length > 8) {
+      setError('O código deve ter exatamente 8 caracteres');
+    }
+    // Verifica caracteres válidos (apenas letras e números)
+    else if (!/^[A-Z0-9]*$/.test(upperText)) {
+      setError('Apenas letras e números são permitidos');
+    } else {
+      setError('');
+    }
+    
+    setCodigoCaixa(upperText);
+  };
 
   const handleSubmit = () => {
     if (codigoCaixa.trim() === '') {
-      alert('Por favor, insira o código da caixa');
+      Alert.alert('Erro', 'Por favor, insira o código da caixa');
       return;
     }
+    
+    if (codigoCaixa.length !== 8) {
+      Alert.alert('Erro', 'O código deve ter exatamente 8 caracteres');
+      return;
+    }
+    
+    if (!codigoCaixa.startsWith('CX')) {
+      Alert.alert('Erro', 'O código deve começar com "CX"');
+      return;
+    }
+    
+    if (!/^[A-Z0-9]+$/.test(codigoCaixa)) {
+      Alert.alert('Erro', 'Apenas letras maiúsculas e números são permitidos');
+      return;
+    }
+
     console.log('Código da caixa enviado:', codigoCaixa);
-    alert('Código registrado com sucesso!');
+    Alert.alert('Sucesso', 'Código registrado com sucesso!');
     setCodigoCaixa('');
+    setError('');
   };
 
   return (
@@ -21,23 +61,26 @@ export default function FluxoSalaNobreScreen() {
       
       <View style={styles.card}>
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Código da Caixa</Text>
-          <View style={styles.inputContainer}>
+          <Text style={styles.label}>Código da Caixa *</Text>
+          <View style={[styles.inputContainer, error ? styles.inputError : null]}>
             <MaterialIcons name="qr-code" size={20} color="#4CAF50" style={styles.inputIcon} />
             <TextInput
               style={styles.input}
               value={codigoCaixa}
-              onChangeText={setCodigoCaixa}
-              placeholder="Digite ou escaneie o código da caixa"
+              onChangeText={validateCodigoCaixa}
+              placeholder="Bipe o código da caixa. EX:CX123456"
               placeholderTextColor="#9E9E9E"
               autoFocus
+              maxLength={8}
+              autoCapitalize="characters"
             />
           </View>
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
         </View>
       </View>
 
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>ENVIAR CÓDIGO</Text>
+        <Text style={styles.submitButtonText}>ENVIAR</Text>
         <MaterialIcons name="send" size={20} color="#FFFFFF" style={styles.buttonIcon} />
       </TouchableOpacity>
     </ScrollView>
@@ -88,6 +131,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 14,
   },
+  inputError: {
+    borderColor: '#F44336',
+  },
   inputIcon: {
     marginRight: 10,
   },
@@ -117,6 +163,12 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   buttonIcon: {
+    marginLeft: 8,
+  },
+  errorText: {
+    color: '#F44336',
+    fontSize: 12,
+    marginTop: 4,
     marginLeft: 8,
   },
 });
