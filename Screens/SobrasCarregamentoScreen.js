@@ -58,7 +58,7 @@ export default function SobrasCarregamentoScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Registro de Sobras do Carregamento</Text>
+      <Text style={styles.header}>Registro de Sobras - Carregamento</Text>
       
       <View style={styles.card}>
         <View style={styles.formGroup}>
@@ -120,7 +120,7 @@ export default function SobrasCarregamentoScreen() {
           <Text style={styles.label}>Pedido cancelado?(Sim/Não)</Text>
           <TouchableOpacity
             style={styles.selectInput}
-            onPress={() => openModal('Cancelado', ['Simm', 'Nãoo'], 'cancelado')}
+            onPress={() => openModal('Cancelado', ['Sim', 'Não'], 'cancelado')}
           >
             <MaterialIcons name="cancel" size={20} color="#4CAF50" style={styles.inputIcon} />
             <Text style={styles.selectText}>
@@ -134,7 +134,7 @@ export default function SobrasCarregamentoScreen() {
           <Text style={styles.label}>Local</Text>
           <TouchableOpacity
             style={styles.selectInput}
-            onPress={() => openModal('Local', ['Baiaa', 'Carrinhoo', 'Bancadaa', 'Ruaa'], 'local')}
+            onPress={() => openModal('Local', ['Baia', 'Carrinho', 'Bancada', 'Rua'], 'local')}
           >
             <MaterialIcons name="location-on" size={20} color="#4CAF50" style={styles.inputIcon} />
             <Text style={styles.selectText}>{formData.local || 'Selecione uma opção'}</Text>
@@ -193,7 +193,7 @@ export default function SobrasCarregamentoScreen() {
       </View>
 
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>SALVAR REGISTRO</Text>
+        <Text style={styles.submitButtonText}>SALVAR</Text>
         <MaterialIcons name="save" size={20} color="#FFFFFF" style={styles.buttonIcon} />
       </TouchableOpacity>
 
