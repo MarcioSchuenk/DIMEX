@@ -17,8 +17,14 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
+  // Função de logout
+  const logout = async () => {
+    await AsyncStorage.removeItem('user');
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

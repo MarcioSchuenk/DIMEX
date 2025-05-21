@@ -10,6 +10,9 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
+import { io } from "socket.io-client";
+
+const socket = io("http://192.168.10.52:3000");
 
 export default function FluxoSalaNobreScreen() {
   const [codigoCaixa, setCodigoCaixa] = useState("");
@@ -59,18 +62,27 @@ export default function FluxoSalaNobreScreen() {
       return;
     }
 
-    console.log("Código da caixa enviado:", codigoCaixa);
-    Alert.alert("Sucesso", "Código registrado com sucesso!");
-    setCodigoCaixa("");
-    setError("");
-
-    // Aqui você pode fazer a chamada para a API
     try {
-      await axios.post(API_URL, {
+      const response = await axios.post(API_URL, {
         codigo: codigoCaixa,
       });
-      Alert.alert("Sucesso", "Código registrado com sucesso!");
+
+      // Verificação explícita de status
+      if (response.status === 201 || response.status === 200) {
+        // Envia o socket só após confirmação de sucesso
+        socket.emit("novaCaixa", {
+          codigo: codigoCaixa,
+          created_at: new Date().toISOString(),
+        });
+
+        Alert.alert("Sucesso", "Código registrado com sucesso!");
+        setCodigoCaixa("");
+        setError("");
+      } else {
+        Alert.alert("Erro", `Falha ao registrar: status ${response.status}`);
+      }
     } catch (error) {
+      console.log("Erro ao registrar código:", error.message);
       Alert.alert(
         "Erro",
         "Não foi possível registrar o código. Verifique a conexão ou fale com o suporte."

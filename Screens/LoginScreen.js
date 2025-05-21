@@ -7,6 +7,11 @@ import {
   StyleSheet,
   Alert,
   Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
@@ -54,101 +59,121 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image
-          source={require("../assets/logo.png")}
-          style={styles.logoImage}
-          resizeMode="contain"
-        />
-        <Text style={styles.title}>Controle Logístico</Text>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.header}>Login</Text>
-
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Usuário</Text>
-          <View style={styles.inputContainer}>
-            <MaterialIcons
-              name="person"
-              size={20}
-              color="#4CAF50"
-              style={styles.inputIcon}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("../assets/logo.png")}
+              style={styles.logoImage}
+              resizeMode="contain"
             />
-            <TextInput
-              style={styles.input}
-              value={username}
-              onChangeText={setUsername}
-              placeholder="Digite seu usuário"
-              placeholderTextColor="#9E9E9E"
-              autoCapitalize="none"
-            />
+            <Text style={styles.title}>Controle Logístico</Text>
           </View>
-        </View>
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Senha</Text>
-          <View style={styles.inputContainer}>
-            <MaterialIcons
-              name="lock"
-              size={20}
-              color="#4CAF50"
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Digite sua senha"
-              placeholderTextColor="#9E9E9E"
-              secureTextEntry={!showPassword}
-            />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <View style={styles.card}>
+            <Text style={styles.header}>Login</Text>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Usuário</Text>
+              <View style={styles.inputContainer}>
+                <MaterialIcons
+                  name="person"
+                  size={20}
+                  color="#4CAF50"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  style={styles.input}
+                  value={username}
+                  onChangeText={setUsername}
+                  placeholder="Digite seu usuário"
+                  placeholderTextColor="#9E9E9E"
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Senha</Text>
+              <View style={styles.inputContainer}>
+                <MaterialIcons
+                  name="lock"
+                  size={20}
+                  color="#4CAF50"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  style={styles.input}
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Digite sua senha"
+                  placeholderTextColor="#9E9E9E"
+                  secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <MaterialIcons
+                    name={showPassword ? "visibility-off" : "visibility"}
+                    size={20}
+                    color="#757575"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <TouchableOpacity style={styles.submitButton} onPress={handleLogin}>
+              <Text style={styles.submitButtonText}>ENTRAR</Text>
               <MaterialIcons
-                name={showPassword ? "visibility-off" : "visibility"}
+                name="login"
                 size={20}
-                color="#757575"
+                color="#FFFFFF"
+                style={styles.buttonIcon}
               />
             </TouchableOpacity>
           </View>
-        </View>
-
-        <TouchableOpacity style={styles.submitButton} onPress={handleLogin}>
-          <Text style={styles.submitButtonText}>ENTRAR</Text>
-          <MaterialIcons
-            name="login"
-            size={20}
-            color="#FFFFFF"
-            style={styles.buttonIcon}
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F5F5F5",
+  },
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: "center",
     padding: 16,
-    backgroundColor: "#F5F5F5",
   },
   logoContainer: {
     alignItems: "center",
-    marginBottom: 40,
+    marginBottom: 24,
+    paddingTop: 20,
   },
   logoImage: {
-    width: 400,
-    height: 300,
+    width: 320,
+    height: 240,
   },
   title: {
     fontSize: 28,
     fontWeight: "700",
     color: "#2E7D32",
-    marginTop: 16,
+    marginTop: 8,
   },
   card: {
     backgroundColor: "#FFFFFF",

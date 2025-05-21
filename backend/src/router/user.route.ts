@@ -9,7 +9,7 @@ export const userRoutes = Router()
 
 const userControllers = new UserControllers()
 
-userRoutes.post("/", verifyRole("ADMIN"), IsValidBody.execute({ body: createUserSchema }), userControllers.createUser)
+userRoutes.post("/", verifyToken.execute, verifyRole("ADMIN"), IsValidBody.execute({ body: createUserSchema }), userControllers.createUser)
 
 userRoutes.post("/login", IsValidBody.execute({ body: userLoginSchema }), userControllers.loginUser)
 
