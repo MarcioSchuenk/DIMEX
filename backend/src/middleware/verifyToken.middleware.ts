@@ -1,23 +1,29 @@
-import { Request, Response, NextFunction } from "express";
+// src/middleware/verifyToken.middleware.ts
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { AuthenticatedRequest } from "../types/AuthenticatedRequest";
 
 export class verifyToken {
-    static execute(req: Request, res: Response, next: NextFunction) {
-        const token = req.headers.authorization?.split(" ")[1];
-        
-        if (!token) {
-            throw new Error("Token is required");
-        }
-        
-        const secret = process.env.JWT_SECRET as string;
+  static execute(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
+    const token = req.headers.authorization?.split(" ")[1];
 
-        jwt.verify(token, secret);
-
-        const decoded = jwt.decode(token);
-        
-        res.locals.decode = decoded;
-
-        next();
+    if (!token) {
+        res.status(401).json({ message: "Token is required" });
+        return;
     }
-}
 
+    try {
+      const secret = process.env.JWT_SECRET as string;
+      const decoded = jwt.verify(token, secret) as unknown as { id: number; role: string };
+
+      req.user = {
+        id: decoded.id,
+        role: decoded.role,
+      };
+
+      next();
+    } catch (error) {
+      res.status(401).json({ message: "Invalid token" });
+    }
+  }
+}
