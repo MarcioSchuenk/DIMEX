@@ -18,7 +18,7 @@ export default function SeparaçaodeCarrinhos({ navigation }) {
   };
 
   const handleOpenAnalytics = () => {
-    Linking.openURL("https://www.deepseek.com");
+    Linking.openURL("https://dimex-nu.vercel.app");
   };
 
   const handleLogout = () => {
