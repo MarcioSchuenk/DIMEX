@@ -22,7 +22,7 @@ export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const API_URL = "http://192.168.10.52:3000/users";
+  const API_URL = "http://192.168.10.200:3000/users";
 
   const { setUser } = useAuth();
 

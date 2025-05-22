@@ -72,6 +72,14 @@ export default function SeparaçaodeCarrinhos({ navigation }) {
               subtitle="Registros de separação"
               onPress={() => navigation.navigate("SeparacaoCarrinhos")}
             />
+
+            {/* Novo card para Registro de Atendimento */}
+            <Card
+              icon="assignment"
+              title="Registro de Atendimento"
+              subtitle="Registrar produtos atendidos"
+              onPress={() => navigation.navigate("RegistroAtendimento")}
+            />
           </>
         )}
 
@@ -119,7 +127,7 @@ function Card({ icon, title, subtitle, onPress }) {
   );
 }
 
-// Estilos
+// Estilos (mantidos os mesmos)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -203,7 +211,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginLeft: 8,
   },
-
   logoutButton: {
     position: "absolute",
     right: 24,
