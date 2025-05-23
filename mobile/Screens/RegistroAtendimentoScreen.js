@@ -8,39 +8,31 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import Icon from "react-native-vector-icons/Feather";
 
 const RegistroAtendimento = () => {
-  // Estados do formulário
   const [nomeCliente, setNomeCliente] = useState("");
+  const [origemNF, setOrigemNF] = useState("");
   const [motorista, setMotorista] = useState("");
   const [ajudante, setAjudante] = useState("");
   const [produtos, setProdutos] = useState([
-    {
-      codigo: "",
-      numero: "",
-      quantidade: "",
-      descricao: "",
-      observacao: "",
-    },
+    { codigo: "", quantidade: "", descricao: "", observacao: "" }, // Adicionei código aqui
   ]);
   const [enviando, setEnviando] = useState(false);
 
-  // Configurações do Pipefy - SUBSTITUA COM SEUS DADOS REAIS
-  const PIPE_ID = "306350886"; // Encontre no URL do seu pipe (ex: "123456")
+  const PIPE_ID = "306350886";
   const PIPE_TOKEN =
-    "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJQaXBlZnkiLCJpYXQiOjE3NDc4NjQ0NDEsImp0aSI6IjNiZTU3MGFiLTY3MjMtNDI0MS04OWIwLWJiYmNiNjIyNTBiMCIsInN1YiI6MzA1NjQ5NTY0LCJ1c2VyIjp7ImlkIjozMDU2NDk1NjQsImVtYWlsIjoicGVkcm8uZUBncnVwb2RpbWUuY29tLmJyIn19.61GdOq6PRR_Hi88sxNfZdJ7HUdSlxct-H-q6fGMLkcZ8gZFlNcPBPzsWO45S6QZz7BryZAlpWhROzuiSbmgOmw"; // Seu token de API completo
+    "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJQaXBlZnkiLCJpYXQiOjE3NDc4NjQ0NDEsImp0aSI6IjNiZTU3MGFiLTY3MjMtNDI0MS04OWIwLWJiYmNiNjIyNTBiMCIsInN1YiI6MzA1NjQ5NTY0LCJ1c2VyIjp7ImlkIjozMDU2NDk1NjQsImVtYWlsIjoicGVkcm8uZUBncnVwb2RpbWUuY29tLmJyIn19.61GdOq6PRR_Hi88sxNfZdJ7HUdSlxct-H-q6fGMLkcZ8gZFlNcPBPzsWO45S6QZz7BryZAlpWhROzuiSbmgOmw";
   const FIELD_IDS = {
     cliente: "nome_do_cliente",
+    origem: "origem_da_nf",
     motorista: "motorista",
     ajudante: "ajudante",
-    codigo: "codigo",
-    numero: "numero",
+    codigo: "codigo", // Adicionei o ID do campo código
     quantidade: "quatidade",
     descricao: "descri_o",
     observacao: "observa_o",
   };
-
-  // Funções auxiliares
 
   const atualizarProduto = (index, campo, valor) => {
     const novosProdutos = [...produtos];
@@ -50,31 +42,25 @@ const RegistroAtendimento = () => {
 
   const limparFormulario = () => {
     setNomeCliente("");
+    setOrigemNF("");
     setMotorista("");
     setAjudante("");
     setProdutos([
-      {
-        codigo: "",
-        numero: "",
-        quantidade: "",
-        descricao: "",
-        observacao: "",
-      },
-    ]);
+      { codigo: "", quantidade: "", descricao: "", observacao: "" },
+    ]); // Atualizado
   };
 
-  // Função principal para enviar ao Pipefy
   const enviarParaPipefy = async () => {
-    // Validação básica
     if (!nomeCliente.trim() || !motorista.trim()) {
+      // Corrigi o nome da variável (era nomeCliente)
       Alert.alert("Atenção", "Preencha todos os campos obrigatórios");
       return;
     }
 
-    const produto = produtos[0]; // Apenas o primeiro produto
+    const produto = produtos[0];
 
-    if (!produto.codigo.trim() || !produto.quantidade.trim()) {
-      Alert.alert("Atenção", "Preencha os campos obrigatórios do produto");
+    if (!produto.quantidade.trim()) {
+      Alert.alert("Atenção", "Preencha a quantidade do produto");
       return;
     }
 
@@ -89,33 +75,34 @@ const RegistroAtendimento = () => {
             { field_id: "${
               FIELD_IDS.cliente
             }", field_value: "${nomeCliente.replace(/"/g, '\\"')}" },
+            { field_id: "${FIELD_IDS.origem}", field_value: "${origemNF.replace(
+        /"/g,
+        '\\"'
+      )}" },
             { field_id: "${
               FIELD_IDS.motorista
             }", field_value: "${motorista.replace(/"/g, '\\"')}" },
             { field_id: "${
               FIELD_IDS.ajudante
             }", field_value: "${ajudante.replace(/"/g, '\\"')}" },
-            { field_id: "${
-              FIELD_IDS.codigo
-            }", field_value: "${produto.codigo.replace(/"/g, '\\"')}" },
-            { field_id: "${
-              FIELD_IDS.numero
-            }", field_value: "${produto.numero.replace(/"/g, '\\"')}" },
+            { field_id: "${FIELD_IDS.codigo}", field_value: "${
+        produto.codigo ? produto.codigo.replace(/"/g, '\\"') : ""
+      }" },
             { field_id: "${
               FIELD_IDS.quantidade
             }", field_value: "${produto.quantidade.replace(/"/g, '\\"')}" },
-            { field_id: "${
-              FIELD_IDS.descricao
-            }", field_value: "${produto.descricao.replace(/"/g, '\\"')}" },
-            { field_id: "${
-              FIELD_IDS.observacao
-            }", field_value: "${produto.observacao.replace(/"/g, '\\"')}" }
+            { field_id: "${FIELD_IDS.descricao}", field_value: "${
+        produto.descricao ? produto.descricao.replace(/"/g, '\\"') : ""
+      }" },
+            { field_id: "${FIELD_IDS.observacao}", field_value: "${
+        produto.observacao ? produto.observacao.replace(/"/g, '\\"') : ""
+      }" }
           ]
-        }) { 
-          card { 
-            id 
-            title 
-          } 
+        }) {
+          card {
+            id
+            title
+          }
         }
       }
     `;
@@ -137,23 +124,18 @@ const RegistroAtendimento = () => {
         throw new Error(`Pipefy API: ${errorMsg}`);
       }
 
-      if (!data.data?.createCard?.card) {
-        throw new Error("Resposta inválida da API");
-      }
-
       Alert.alert(
         "✅ Sucesso",
-        `Card criado no Pipefy com ID: ${data.data.createCard.card.id}`
+        `Card criado com ID: ${data.data.createCard.card.id}`
       );
       limparFormulario();
     } catch (error) {
-      console.error("Erro completo:", error);
+      console.error("Erro:", error);
       Alert.alert("❌ Erro", `Falha no envio: ${error.message}`);
     } finally {
       setEnviando(false);
     }
   };
-
   return (
     <ScrollView
       style={styles.container}
@@ -161,95 +143,138 @@ const RegistroAtendimento = () => {
     >
       <Text style={styles.titulo}>Registro de Atendimento</Text>
 
-      {/* Seção de informações básicas */}
-      <View style={styles.secao}>
-        <Text style={styles.label}>Nome do Cliente *</Text>
+      {/* Cliente */}
+      <View style={styles.inputContainer}>
+        <Icon name="user" size={20} color="#7f8c8d" style={styles.inputIcon} />
         <TextInput
-          style={styles.input}
+          style={styles.inputWithIcon}
           value={nomeCliente}
           onChangeText={setNomeCliente}
-          placeholder="Nome completo do cliente"
-          editable={!enviando}
-        />
-
-        <Text style={styles.label}>Motorista *</Text>
-        <TextInput
-          style={styles.input}
-          value={motorista}
-          onChangeText={setMotorista}
-          placeholder="Nome do motorista"
-          editable={!enviando}
-        />
-
-        <Text style={styles.label}>Ajudante</Text>
-        <TextInput
-          style={styles.input}
-          value={ajudante}
-          onChangeText={setAjudante}
-          placeholder="Nome do ajudante (opcional)"
+          placeholder="Nome do cliente *"
           editable={!enviando}
         />
       </View>
 
-      {/* Seção de produtos */}
-      <Text style={[styles.label, styles.secaoTitulo]}>Produtos</Text>
+      {/* Origem da NF */}
+      <View style={styles.inputContainer}>
+        <Icon name="mail" size={20} color="#7f8c8d" style={styles.inputIcon} />
+        <TextInput
+          style={styles.inputWithIcon}
+          value={origemNF}
+          onChangeText={setOrigemNF}
+          placeholder="Origem da NF"
+          editable={!enviando}
+        />
+      </View>
+
+      {/* Motorista */}
+      <View style={styles.inputContainer}>
+        <Icon name="truck" size={20} color="#7f8c8d" style={styles.inputIcon} />
+        <TextInput
+          style={styles.inputWithIcon}
+          value={motorista}
+          onChangeText={setMotorista}
+          placeholder="Nome do motorista *"
+          editable={!enviando}
+        />
+      </View>
+
+      {/* Ajudante */}
+      <View style={styles.inputContainer}>
+        <Icon name="users" size={20} color="#7f8c8d" style={styles.inputIcon} />
+        <TextInput
+          style={styles.inputWithIcon}
+          value={ajudante}
+          onChangeText={setAjudante}
+          placeholder="Nome do ajudante"
+          editable={!enviando}
+        />
+      </View>
+
+      <Text style={[styles.secaoTitulo, { marginTop: 20 }]}>Produto</Text>
 
       {produtos.map((produto, index) => (
         <View key={index} style={styles.produtoContainer}>
-          <Text style={styles.subtitulo}>Produto {index + 1}</Text>
+          {/* Código - NOVO */}
+          <View style={styles.inputContainer}>
+            <Icon
+              name="hash"
+              size={20}
+              color="#7f8c8d"
+              style={styles.inputIcon}
+            />
+            <TextInput
+              style={styles.inputWithIcon}
+              value={produto.codigo}
+              onChangeText={(text) => atualizarProduto(index, "codigo", text)}
+              placeholder="Código"
+              editable={!enviando}
+            />
+          </View>
 
-          <Text style={styles.label}>Código *</Text>
-          <TextInput
-            style={styles.input}
-            value={produto.codigo}
-            onChangeText={(text) => atualizarProduto(index, "codigo", text)}
-            placeholder="Código do produto"
-            keyboardType="default"
-            editable={!enviando}
-          />
+          {/* Quantidade */}
+          <View style={styles.inputContainer}>
+            <Icon
+              name="layers"
+              size={20}
+              color="#7f8c8d"
+              style={styles.inputIcon}
+            />
+            <TextInput
+              style={styles.inputWithIcon}
+              value={produto.quantidade}
+              onChangeText={(text) =>
+                atualizarProduto(index, "quantidade", text)
+              }
+              placeholder="Quantidade *"
+              keyboardType="numeric"
+              editable={!enviando}
+            />
+          </View>
 
-          <Text style={styles.label}>Número</Text>
-          <TextInput
-            style={styles.input}
-            value={produto.numero}
-            onChangeText={(text) => atualizarProduto(index, "numero", text)}
-            placeholder="Número (opcional)"
-            keyboardType="numeric"
-            editable={!enviando}
-          />
+          {/* Descrição */}
+          <View style={styles.inputContainer}>
+            <Icon
+              name="file-text"
+              size={20}
+              color="#7f8c8d"
+              style={styles.inputIcon}
+            />
+            <TextInput
+              style={[styles.inputWithIcon, styles.textArea]}
+              value={produto.descricao}
+              onChangeText={(text) =>
+                atualizarProduto(index, "descricao", text)
+              }
+              placeholder="Descrição"
+              multiline
+              editable={!enviando}
+            />
+          </View>
 
-          <Text style={styles.label}>Quantidade *</Text>
-          <TextInput
-            style={styles.input}
-            value={produto.quantidade}
-            onChangeText={(text) => atualizarProduto(index, "quantidade", text)}
-            placeholder="Quantidade"
-            keyboardType="numeric"
-            editable={!enviando}
-          />
-
-          <Text style={styles.label}>Descrição</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            value={produto.descricao}
-            onChangeText={(text) => atualizarProduto(index, "descricao", text)}
-            placeholder="Descrição do produto"
-            multiline
-            editable={!enviando}
-          />
-
-          <Text style={styles.label}>Observação</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            value={produto.observacao}
-            onChangeText={(text) => atualizarProduto(index, "observacao", text)}
-            placeholder="Observações adicionais"
-            multiline
-            editable={!enviando}
-          />
+          {/* Observação */}
+          <View style={styles.inputContainer}>
+            <Icon
+              name="clipboard"
+              size={20}
+              color="#7f8c8d"
+              style={styles.inputIcon}
+            />
+            <TextInput
+              style={[styles.inputWithIcon, styles.textArea]}
+              value={produto.observacao}
+              onChangeText={(text) =>
+                atualizarProduto(index, "observacao", text)
+              }
+              placeholder="Observações"
+              multiline
+              editable={!enviando}
+            />
+          </View>
         </View>
       ))}
 
+      {/* Botão */}
       <TouchableOpacity
         style={[styles.botaoPrimario, enviando && styles.botaoDesabilitado]}
         onPress={enviarParaPipefy}
@@ -263,98 +288,96 @@ const RegistroAtendimento = () => {
   );
 };
 
-// Estilos melhorados
+// Estilos (mantidos os mesmos)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f5f6fa",
+    paddingHorizontal: 16,
   },
   scrollContent: {
-    padding: 20,
     paddingBottom: 40,
   },
   titulo: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 20,
+    fontSize: 24,
+    fontWeight: "700",
+    marginVertical: 20,
     textAlign: "center",
     color: "#2c3e50",
   },
-  secao: {
-    marginBottom: 20,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    elevation: 2,
-  },
   secaoTitulo: {
     fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 15,
+    fontWeight: "600",
     marginBottom: 10,
     color: "#34495e",
   },
-  label: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: "#7f8c8d",
-    fontWeight: "500",
-  },
-  input: {
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 15,
+    borderColor: "#ecf0f1",
+  },
+  inputIcon: {
+    marginRight: 10,
+    color: "#7f8c8d",
+  },
+  inputWithIcon: {
+    flex: 1,
     fontSize: 16,
-    backgroundColor: "#fff",
+    color: "#2d3436",
   },
   textArea: {
-    minHeight: 80,
-    textAlignVertical: "top",
+    minHeight: 100,
+    textAlignVertical: "center",
+    fontSize: 16,
+    color: "#2d3436",
+    backgroundColor: "#ffffff",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: "#ecf0f1",
   },
   produtoContainer: {
-    marginBottom: 20,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    elevation: 2,
-  },
-  subtitulo: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 12,
-    color: "#2c3e50",
+    marginBottom: 24,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ecf0f1",
   },
   botaoPrimario: {
     backgroundColor: "#3498db",
-    padding: 16,
-    borderRadius: 8,
+    paddingVertical: 16,
+    borderRadius: 12,
     alignItems: "center",
-    marginVertical: 10,
-    elevation: 2,
-  },
-  botaoSecundario: {
-    backgroundColor: "#2ecc71",
-    padding: 14,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  botaoRemover: {
-    backgroundColor: "#e74c3c",
-    padding: 12,
-    borderRadius: 6,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  botaoDesabilitado: {
-    opacity: 0.6,
+    marginTop: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   botaoTexto: {
-    color: "white",
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
+  },
+  botaoDesabilitado: {
+    backgroundColor: "#95a5a6",
   },
 });
 

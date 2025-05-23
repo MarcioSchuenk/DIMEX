@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { SobrasController } from "../controllers/sobras.controllers";
 
-export const routes = Router();
+export const sobrasRoutes = Router();
 
 const sobrasControllers = new SobrasController();
 
-routes.post("/", sobrasControllers.createSobras);
+sobrasRoutes.post("/", sobrasControllers.createSobras);
+sobrasRoutes.get("/", sobrasControllers.getSobras);

@@ -11,4 +11,11 @@ export class SobrasController {
 
     res.status(201).json(response);
   }
+
+  async getSobras(req: Request, res: Response) {
+    const sobrasServices = container.resolve(SobrasServices);
+    const response = await sobrasServices.getSobras();
+
+    res.status(200).json(response);
+  }
 }
