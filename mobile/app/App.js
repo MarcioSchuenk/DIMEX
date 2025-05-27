@@ -12,6 +12,7 @@ import LoginScreen from "../Screens/LoginScreen";
 import RegistroAtendimento from "../Screens/RegistroAtendimentoScreen";
 import { AuthProvider } from "../providers/AuthContext";
 
+
 const Stack = createStackNavigator();
 
 export default function App() {

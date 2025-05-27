@@ -22,7 +22,7 @@ export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const API_URL = "http://192.168.10.200:3000/users";
+  const API_URL = "https://d6f7-200-225-228-145.ngrok-free.app/users";
 
   const { setUser } = useAuth();
 
@@ -33,6 +33,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     try {
+      console.log("Enviando login para:", `${API_URL}/login`);
       const response = await axios.post(`${API_URL}/login`, {
         login: username,
         password: password,

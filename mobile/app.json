@@ -12,10 +12,31 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O aplicativo precisa acessar suas fotos para anexar imagens aos documentos.",
+          "cameraPermission": "O aplicativo precisa acessar sua câmera para fotografar documentos."
+        }
+      ]
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Precisamos acessar sua câmera para fotografar documentos e comprovantes",
+        "NSPhotoLibraryUsageDescription": "Precisamos acessar sua galeria para selecionar imagens de documentos",
+        "NSPhotoLibraryAddUsageDescription": "Precisamos salvar fotos tiradas no aplicativo"
+      }
     },
     "android": {
+      "usesCleartextTraffic": true,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -30,6 +51,9 @@
       "eas": {
         "projectId": "20828e8e-dbdc-495b-8295-732ecc754c31"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }

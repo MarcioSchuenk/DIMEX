@@ -6,8 +6,8 @@ const server = http.createServer(app); // cria um servidor HTTP com o Express
 
 initWebSocket(server); // inicializa o socket.io com esse servidor
 
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || "3000", 10);
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -12,12 +12,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const socket = io("http://192.168.10.200:3000");
+const socket = io("https://d6f7-200-225-228-145.ngrok-free.app");
 
 export default function FluxoSalaNobreScreen() {
   const [codigoCaixa, setCodigoCaixa] = useState("");
   const [error, setError] = useState("");
-  const API_URL = "http://192.168.10.200:3000/caixas";
+  const API_URL = "https://d6f7-200-225-228-145.ngrok-free.app/caixas";
 
   const validateCodigoCaixa = (text) => {
     // Converte para maiúsculas automaticamente

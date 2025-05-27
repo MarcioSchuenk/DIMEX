@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "ac026701-eced-4494-af51-795da7acab52"
+      }
+    },
+    "android": {
+      "package": "com.marcio.schuenk.dimex"
+    }
+  }
+}
