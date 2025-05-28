@@ -6,7 +6,7 @@ export class SobrasServices {
   async addSobras(data: SobrasServices) {
     return await prisma.sobras.create({ data });
   }
-  async getSobras() {
+  async getAllSobras() {
     return await prisma.sobras.findMany()
   }
 }

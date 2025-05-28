@@ -25,11 +25,12 @@ model User {
 model Sobras {
   id               Int   @id @default(autoincrement())
   codigo           String?
-  data             DateTime?
   quantidade       Int?
-  pedido_cancelado Boolean?
-  description      String?
+  pedido_cancelado String?
   localizacao      String?
+  onde_qual        String?
+  quadrante        String?
+  description      String?
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 }
