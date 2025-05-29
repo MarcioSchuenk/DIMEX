@@ -14,9 +14,10 @@ import {
 } from "recharts";
 import "./styles/app.scss";
 import { io } from "socket.io-client";
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Conectando ao servidor WebSocket
-const socket = io("https://d6f7-200-225-228-145.ngrok-free.app");
+const socket = io(API_URL);
 
 // Gera os horários de 08h até 21h
 const gerarHoras = () => {
@@ -43,7 +44,7 @@ function App() {
   useEffect(() => {
     const buscarDados = async () => {
       try {
-        const res = await axios.get("https://d6f7-200-225-228-145.ngrok-free.app/caixas");
+        const res = await axios.get(`${API_URL}/caixas`);
         setDadosBrutos(res.data);
       } catch (err) {
         console.error("Erro ao buscar dados:", err);
