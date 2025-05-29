@@ -14,7 +14,7 @@ enum Role {
 }
 
 model User {
-  id               Int   @id @default(autoincrement())
+  id         Int   @id @default(autoincrement())
   login      String @unique
   password  String
   role Role @default(USER)
