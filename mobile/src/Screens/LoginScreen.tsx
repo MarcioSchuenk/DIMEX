@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,29 +10,28 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-} from 'react-native';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuth } from '../../providers/AuthContext';
-import { API_URL } from '@env';
-import { InputField } from '../components/InputField';
-import { AuthButton } from '../components/AuthButton';
-import { Card } from '../components/CardFluxoSalaNobre';
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "../../providers/AuthContext";
+import { InputField } from "../components/InputField";
+import { AuthButton } from "../components/AuthButton";
+import { Card } from "../components/CardFluxoSalaNobre";
+import { api } from "../services/api";
+
 export const LoginScreen = ({ navigation }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { setUser } = useAuth();
 
   const handleLogin = async () => {
     if (!username || !password) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+      Alert.alert("Erro", "Por favor, preencha todos os campos");
       return;
     }
 
     try {
-      console.log('Enviando login para:', `${API_URL}/users/login`);
-      const response = await axios.post(`${API_URL}/users/login`, {
+      const response = await api.post("/users/login", {
         login: username,
         password: password,
       });
@@ -43,16 +42,25 @@ export const LoginScreen = ({ navigation }) => {
         id: user.id,
         name: user.login,
         role: user.role,
+        token: accessToken,
       };
 
+      // Seta token padrão no axios para futuras requisições
+      api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
+      // Atualiza contexto
       setUser(userData);
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
-      navigation.replace('Home');
+
+      // Persiste localmente
+      await AsyncStorage.setItem("@auth", JSON.stringify(userData));
+
+      // Redireciona para a tela Home
+      navigation.replace("Home");
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao fazer login:", error);
       Alert.alert(
-        'Erro',
-        error.response?.data?.message || 'Erro ao fazer login'
+        "Erro",
+        error.response?.data?.message || "Erro ao fazer login"
       );
     }
   };
@@ -63,7 +71,7 @@ export const LoginScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -73,7 +81,7 @@ export const LoginScreen = ({ navigation }) => {
         >
           <View style={styles.logoContainer}>
             <Image
-              source={require('../assets/logo.png')}
+              source={require("../assets/logo.png")}
               style={styles.logoImage}
               resizeMode="contain"
             />
@@ -98,15 +106,11 @@ export const LoginScreen = ({ navigation }) => {
               onChangeText={setPassword}
               placeholder="Digite sua senha"
               secureTextEntry={!showPassword}
-              rightIcon={showPassword ? 'visibility-off' : 'visibility'}
+              rightIcon={showPassword ? "visibility-off" : "visibility"}
               onRightIconPress={() => setShowPassword(!showPassword)}
             />
 
-            <AuthButton
-              onPress={handleLogin}
-              label="ENTRAR"
-              icon="login"
-            />
+            <AuthButton onPress={handleLogin} label="ENTRAR" icon="login" />
           </Card>
         </ScrollView>
       </TouchableWithoutFeedback>
@@ -117,15 +121,15 @@ export const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 16,
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 24,
     paddingTop: 20,
   },
@@ -135,15 +139,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
-    color: '#2E7D32',
+    fontWeight: "700",
+    color: "#2E7D32",
     marginTop: 8,
   },
   header: {
     fontSize: 22,
-    fontWeight: '700',
-    color: '#2E7D32',
+    fontWeight: "700",
+    color: "#2E7D32",
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

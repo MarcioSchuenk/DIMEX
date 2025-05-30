@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.userRoutes = void 0;
+const express_1 = require("express");
+const user_controllers_1 = require("../controllers/user.controllers");
+const isValidBody_middleware_1 = require("../middleware/isValidBody.middleware");
+const userSchema_schema_1 = require("../schemas/userSchema.schema");
+const verifyToken_middleware_1 = require("../middleware/verifyToken.middleware");
+const verifyRole_middleware_1 = require("../middleware/verifyRole.middleware");
+exports.userRoutes = (0, express_1.Router)();
+const userControllers = new user_controllers_1.UserControllers();
+exports.userRoutes.post("/", isValidBody_middleware_1.IsValidBody.execute({ body: userSchema_schema_1.createUserSchema }), userControllers.createUser);
+exports.userRoutes.post("/login", isValidBody_middleware_1.IsValidBody.execute({ body: userSchema_schema_1.userLoginSchema }), userControllers.loginUser);
+exports.userRoutes.get("/profile", verifyToken_middleware_1.verifyToken.execute, (0, verifyRole_middleware_1.verifyRole)("ADMIN"), userControllers.getUser);
+exports.userRoutes.get("/", verifyToken_middleware_1.verifyToken.execute, (0, verifyRole_middleware_1.verifyRole)("ADMIN"), userControllers.getAllUsers);
+exports.userRoutes.put("/", verifyToken_middleware_1.verifyToken.execute, (0, verifyRole_middleware_1.verifyRole)("ADMIN"), isValidBody_middleware_1.IsValidBody.execute({ body: userSchema_schema_1.createUserSchema }), userControllers.updateUser);

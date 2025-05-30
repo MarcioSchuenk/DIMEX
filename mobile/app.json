@@ -19,6 +19,12 @@
           "photosPermission": "O aplicativo precisa acessar suas fotos para anexar imagens aos documentos.",
           "cameraPermission": "O aplicativo precisa acessar sua câmera para fotografar documentos."
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Precisamos acessar sua câmera para fotografar documentos e comprovantes."
+        }
       ]
     ],
     "ios": {
