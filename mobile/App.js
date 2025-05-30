@@ -9,7 +9,7 @@ import SobrasSalaNobreScreen from "./src/Screens/SobrasSalaNobreScreen";
 import { FormularioPedidosScreen } from "./src/Screens/FormularioPedidosScreen";
 import { FluxoSalaNobreScreen } from "./src/Screens/FluxoSalaNobreScreen";
 import { LoginScreen } from "./src/Screens/LoginScreen";
-import RegistroAtendimento from "./src/Screens/RegistroAtendimentoScreen";
+import { FormularioApp } from "./src/Screens/RegistroAtendimentoScreen";
 import { AuthProvider } from "./providers/AuthContext";
 
 const Stack = createStackNavigator();
@@ -49,7 +49,7 @@ export default function App() {
             />
             <Stack.Screen
               name="RegistroAtendimento"
-              component={RegistroAtendimento}
+              component={FormularioApp}
               options={{ title: "Registro de Atendimento", headerShown: true }}
             />
           </Stack.Navigator>

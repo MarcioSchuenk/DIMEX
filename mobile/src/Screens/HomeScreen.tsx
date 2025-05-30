@@ -26,6 +26,7 @@ export const HomeScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.cardsContainer}>
+        {/* Cards administrativos - apenas para ADMIN */}
         {user?.role === "ADMIN" && (
           <>
             <CardButton
@@ -40,13 +41,6 @@ export const HomeScreen = ({ navigation }) => {
               title="Sobras da Sala Nobre"
               subtitle="Registrar no app"
               onPress={() => navigation.navigate("SobrasSalaNobre")}
-            />
-
-            <CardButton
-              icon="swap-vert"
-              title="Fluxo da sala nobre"
-              subtitle="Registrar código da caixa"
-              onPress={() => navigation.navigate("FluxoSalaNobre")}
             />
 
             <CardButton
@@ -65,7 +59,8 @@ export const HomeScreen = ({ navigation }) => {
           </>
         )}
 
-        {user?.role === "USER" && (
+        {/* Card para NOBRE e USER */}
+        {(user?.role === "NOBRE" || user?.role === "ADMIN") && (
           <CardButton
             icon="swap-vert"
             title="Fluxo da sala nobre"

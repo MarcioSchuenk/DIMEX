@@ -1,7 +1,7 @@
 export interface IUser {
   login?: string | null;
   password: string;
-  role?: "USER" | "ADMIN" | "MODERATOR";
+  role?: "USER" | "ADMIN" | "NOBRE";
 }
 
 export interface IUserLogin {
