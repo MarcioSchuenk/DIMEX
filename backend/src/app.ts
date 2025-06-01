@@ -6,10 +6,9 @@ import "express-async-errors";
 import { sobrasRoutes } from "./router/sobra.route";
 import { salaNobreRoutes } from './router/salanobre.route';
 import { userRoutes } from './router/user.route';
-
+import { HandleErrors } from './error/handleErrors.middleware';
 
 export const app = express();
-
 
 
 app.use(helmet());
@@ -21,3 +20,5 @@ app.use(json());
 app.use('/sobras', sobrasRoutes);
 app.use('/caixas', salaNobreRoutes);
 app.use("/users", userRoutes)
+
+app.use(HandleErrors.execute);

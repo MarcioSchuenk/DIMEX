@@ -1,14 +1,12 @@
 import { Router } from "express";
 import { SobrasController } from "../controllers/sobras.controllers";
+import { IsValidBody } from "../middleware/isValidBody.middleware";
+import { createSobrasSchema } from "../schemas/sobras.schemas";
+import { verifyToken } from "../middleware/verifyToken.middleware";
 
-export const routes = Router();
+export const sobrasRoutes = Router();
 
-export const sobrasRoutes = () => {
-  routes.post("/sobras", async (req, res, next) => {
-    try {
-      await new SobrasController().createSobras(req, res);
-    } catch (error) {
-      next(error);
-    }
-  });
-};
+const sobrasControllers = new SobrasController();
+
+sobrasRoutes.post("/", verifyToken.execute, IsValidBody.execute({ body: createSobrasSchema}), sobrasControllers.createSobras);
+sobrasRoutes.get("/", verifyToken.execute, sobrasControllers.getAllSobras);
