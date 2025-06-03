@@ -7,11 +7,11 @@ import { validateCaixaCode } from "../utils/validation.caixa";
 import { SubmitButton } from "../components/SubmitButton";
 import { Card } from "../components/CardFluxoSalaNobre";
 
-export const FluxoSalaNobreScreen: React.FC = () => {
+export const FluxoSalaNobreScreen = () => {
   const [codigoCaixa, setCodigoCaixa] = useState("");
   const [error, setError] = useState("");
 
-  const handleCodeChange = (text: string) => {
+  const handleCodeChange = (text) => {
     const upperText = text.toUpperCase();
     setCodigoCaixa(upperText);
     setError(validateCaixaCode(upperText));
@@ -27,7 +27,7 @@ export const FluxoSalaNobreScreen: React.FC = () => {
       await registrarCodigoCaixa(codigoCaixa);
       Alert.alert("Sucesso", "Código registrado com sucesso!");
       setCodigoCaixa("");
-    } catch (err: any) {
+    } catch (err) {
       console.error("Erro ao registrar:", err.message);
       Alert.alert("Erro", "Falha ao registrar código. Tente novamente.");
     }

@@ -2,6 +2,8 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet, TextStyle, ViewStyle } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
+
 
 interface CodigoCaixaInputProps {
   value: string;
@@ -67,7 +69,7 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 20,
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
     marginBottom: 8,
     color: "#424242",
@@ -91,7 +93,7 @@ const styles = StyleSheet.create<Styles>({
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: RFValue(12),
     color: "#212121",
     includeFontPadding: false,
   },

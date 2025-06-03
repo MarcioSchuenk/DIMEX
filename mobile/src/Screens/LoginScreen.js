@@ -10,6 +10,7 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  SafeAreaView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../providers/AuthContext";
@@ -70,51 +71,52 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <TouchableWithoutFeedback onPress={dismissKeyboard}>
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          keyboardShouldPersistTaps="handled"
-        >
-          <View style={styles.logoContainer}>
-            <Image
-              source={require("../assets/logo.png")}
-              style={styles.logoImage}
-              resizeMode="contain"
-            />
-            <Text style={styles.title}>Controle Logístico</Text>
-          </View>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.logoContainer}>
+              <Image
+                source={require("../assets/logo.png")}
+                style={styles.logoImage}
+                resizeMode="contain"
+              />
+              <Text style={styles.title}>Controle Logístico</Text>
+            </View>
 
-          <Card>
-            <Text style={styles.header}>Login</Text>
+            <Card>
+              <Text style={styles.header}>Login</Text>
 
-            <InputField
-              label="Usuário"
-              icon="person"
-              value={username}
-              onChangeText={setUsername}
-              placeholder="Digite seu usuário"
-            />
+              <InputField
+                label="Usuário"
+                icon="person"
+                value={username}
+                onChangeText={setUsername}
+                placeholder="Digite seu usuário"
+              />
 
-            <InputField
-              label="Senha"
-              icon="lock"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Digite sua senha"
-              secureTextEntry={!showPassword}
-              rightIcon={showPassword ? "visibility-off" : "visibility"}
-              onRightIconPress={() => setShowPassword(!showPassword)}
-            />
+              <InputField
+                label="Senha"
+                icon="lock"
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Digite sua senha"
+                secureTextEntry={!showPassword}
+                rightIcon={showPassword ? "visibility-off" : "visibility"}
+                onRightIconPress={() => setShowPassword(!showPassword)}
+              />
 
-            <AuthButton onPress={handleLogin} label="ENTRAR" icon="login" />
-          </Card>
-        </ScrollView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+              <AuthButton onPress={handleLogin} label="ENTRAR" icon="login" />
+            </Card>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

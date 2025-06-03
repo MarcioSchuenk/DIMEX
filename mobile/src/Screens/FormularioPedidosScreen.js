@@ -5,27 +5,22 @@ import { InputField } from "../components/InputField";
 import { AddItemButton } from "../components/AddItemButton";
 import { AuthButton } from "../components/AuthButton";
 
-type Pedido = {
-  id: number;
-  valor: string;
-  hasError: boolean;
-};
 
 export const FormularioPedidosScreen = () => {
   const [codigoSeparador, setCodigoSeparador] = useState("");
   const [codigoSeparadorError, setCodigoSeparadorError] = useState(false);
-  const [pedidos, setPedidos] = useState<Pedido[]>([
+  const [pedidos, setPedidos] = useState([
     { id: 1, valor: "", hasError: false },
   ]);
 
   // Validações
-  const validateNumber = (value: string) => /^\d*$/.test(value);
-  const validatePedidoLength = (value: string) =>
+  const validateNumber = (value) => /^\d*$/.test(value);
+  const validatePedidoLength = (value) =>
     value.length === 0 || value.length === 7;
-  const validateCodigoSeparadorLength = (value: string) => value.length === 6;
+  const validateCodigoSeparadorLength = (value) => value.length === 6;
 
   // Handlers
-  const handleCodigoSeparadorChange = (value: string) => {
+  const handleCodigoSeparadorChange = (value) => {
     if (value !== "" && !validateNumber(value)) return;
     setCodigoSeparador(value);
     if (codigoSeparadorError && validateCodigoSeparadorLength(value)) {
@@ -33,7 +28,7 @@ export const FormularioPedidosScreen = () => {
     }
   };
 
-  const handlePedidoChange = (id: number, value: string) => {
+  const handlePedidoChange = (id, value) => {
     if (value !== "" && !validateNumber(value)) return;
 
     setPedidos((prev) =>
@@ -53,7 +48,7 @@ export const FormularioPedidosScreen = () => {
     setPedidos([...pedidos, { id: maxId + 1, valor: "", hasError: false }]);
   };
 
-  const removerPedido = (id: number) => {
+  const removerPedido = (id) => {
     if (pedidos.length <= 1) return;
     setPedidos(pedidos.filter((pedido) => pedido.id !== id));
   };

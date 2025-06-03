@@ -70,12 +70,14 @@ export const HomeScreen = ({ navigation }) => {
         )}
       </View>
 
-      <FloatingActionButton
-        icon="analytics"
-        label="WEB PAGE ANALYTICS"
-        onPress={handleOpenAnalytics}
-        position="left"
-      />
+      {user?.role === "ADMIN" && (
+        <FloatingActionButton
+          icon="analytics"
+          label="WEB PAGE ANALYTICS"
+          onPress={handleOpenAnalytics}
+          position="left"
+        />
+      )}
 
       <FloatingActionButton
         icon="logout"
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5F5F5",
-    paddingTop: 48,
+    paddingTop: 58,
     paddingHorizontal: 24,
   },
   headerContainer: {

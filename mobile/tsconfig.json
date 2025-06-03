@@ -1,18 +1,10 @@
 {
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
-    "allowJs": true,
-    "jsx": "react-native",
-    "noEmit": true,
-    "isolatedModules": true,
-    "strict": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "types": ["expo"],
-    "skipLibCheck": true
+    "jsx": "react-native",  // necessário para React Native
+    "strict": true,         // mantém checagem rigorosa
+    "skipLibCheck": true    // para evitar checagem excessiva em libs externas
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/Screens/HomeScreen.js", "src/Screens/LoginScreen.js", "src/Screens/FormularioPedidosScreen.js", "src/Screens/FluxoSalaNobreScreen.js", "providers/AuthContext.js"],
   "exclude": ["node_modules"]
 }
