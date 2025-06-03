@@ -9,17 +9,14 @@ import {
   Tooltip,
   CartesianGrid,
   Legend,
-  Line,
   LabelList,
 } from "recharts";
 import "./styles/app.scss";
 import { io } from "socket.io-client";
-const API_URL = import.meta.env.VITE_API_URL;
 
-// Conectando ao servidor WebSocket
+const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
 
-// Gera os horários de 08h até 21h
 const gerarHoras = () => {
   const horas = [];
   for (let i = 8; i <= 21; i++) {
@@ -40,7 +37,13 @@ function App() {
   });
   const [forcarAtualizacao, setForcarAtualizacao] = useState(false);
 
-  // Busca inicial dos dados
+  const formatarDataLocal = (data) => {
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const dia = String(data.getDate()).padStart(2, "0");
+    return `${ano}-${mes}-${dia}`;
+  };
+
   useEffect(() => {
     const buscarDados = async () => {
       try {
@@ -50,37 +53,40 @@ function App() {
         console.error("Erro ao buscar dados:", err);
       }
     };
-
     buscarDados();
   }, []);
 
-  // Escuta eventos do WebSocket
   useEffect(() => {
     socket.on("novaCaixa", (novaCaixa) => {
       console.log("Nova caixa recebida via socket:", novaCaixa);
 
-      setDadosBrutos((prev) => [...prev, novaCaixa]);
+      setDadosBrutos((prev) => {
+        const novosDados = [...prev, novaCaixa];
+        console.log("Dados brutos atualizados:", novosDados);
+        return novosDados;
+      });
 
-      const dataDaNovaCaixa = novaCaixa.created_at.slice(0, 10);
-      if (dataDaNovaCaixa === dataSelecionada) {
-        setForcarAtualizacao((prev) => !prev); // força reprocessamento
-      }
+      // Força sempre o reprocessamento
+      setForcarAtualizacao((prev) => !prev);
     });
 
     return () => {
       socket.off("novaCaixa");
     };
-  }, [dataSelecionada]);
+  }, []);
 
-  // Reprocessa os dados quando `dadosBrutos`, `dataSelecionada` ou `forcarAtualizacao` mudarem
   useEffect(() => {
     const horas = gerarHoras();
-    const dadosFiltrados = dadosBrutos.filter((caixa) =>
-      caixa.created_at.startsWith(dataSelecionada)
-    );
+    const dadosFiltrados = dadosBrutos.filter((caixa) => {
+      const dataCaixa = new Date(caixa.created_at);
+      const dataFormatadaCaixa = formatarDataLocal(dataCaixa);
+      return dataFormatadaCaixa === dataSelecionada;
+    });
+
+    console.log(`Processando dados para a data ${dataSelecionada}`);
+    console.log("Dados filtrados:", dadosFiltrados);
 
     const contagemPorHora = {};
-
     horas.forEach((hora) => {
       contagemPorHora[hora] = 0;
     });
@@ -96,7 +102,6 @@ function App() {
     const dadosFormatados = horas.map((hora) => ({
       hora,
       pacotes: contagemPorHora[hora],
-      tendencia: 0,
     }));
 
     const total = dadosFiltrados.length;
@@ -166,7 +171,6 @@ function App() {
             margin={{ top: 30, right: 15, left: -15, bottom: 0 }}
           >
             <CartesianGrid stroke="none" />
-
             <XAxis
               dataKey="hora"
               interval={0}
@@ -176,15 +180,13 @@ function App() {
               stroke="#ccc"
               tick={{ fill: "#ccc" }}
             />
-
             <YAxis
-              domain={[0, 150]}
+              domain={[0, "dataMax + 10"]}
               interval={0}
               tickCount={10}
               stroke="#ccc"
               tick={{ fill: "#ccc" }}
             />
-
             <Tooltip
               contentStyle={{
                 backgroundColor: "#1f2937",
@@ -194,9 +196,7 @@ function App() {
               labelStyle={{ color: "#ffffff" }}
               itemStyle={{ color: "#ffffff" }}
             />
-
             <Legend wrapperStyle={{ color: "#ffffff" }} />
-
             <Bar dataKey="pacotes" fill="#3b82f6" name="Pacotes por hora">
               <LabelList
                 dataKey="pacotes"

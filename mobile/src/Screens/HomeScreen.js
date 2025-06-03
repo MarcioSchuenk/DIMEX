@@ -70,12 +70,14 @@ export const HomeScreen = ({ navigation }) => {
         )}
       </View>
 
-      <FloatingActionButton
-        icon="analytics"
-        label="WEB PAGE ANALYTICS"
-        onPress={handleOpenAnalytics}
-        position="left"
-      />
+      {user?.role === "ADMIN" && (
+        <FloatingActionButton
+          icon="analytics"
+          label="WEB PAGE ANALYTICS"
+          onPress={handleOpenAnalytics}
+          position="left"
+        />
+      )}
 
       <FloatingActionButton
         icon="logout"
