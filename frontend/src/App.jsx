@@ -15,7 +15,9 @@ import "./styles/app.scss";
 import { io } from "socket.io-client";
 
 const API_URL = import.meta.env.VITE_API_URL;
-const socket = io(API_URL);
+const socket = io(API_URL, {
+  transports: ["websocket"],
+});
 
 const gerarHoras = () => {
   const horas = [];
@@ -26,7 +28,7 @@ const gerarHoras = () => {
 };
 
 function App() {
-  const [dataSelecionada, setDataSelecionada] = useState("2025-05-21");
+  const [dataSelecionada, setDataSelecionada] = useState("");
   const [dadosBrutos, setDadosBrutos] = useState([]);
   const [dadosPorHora, setDadosPorHora] = useState([]);
   const [estatisticas, setEstatisticas] = useState({
@@ -47,7 +49,11 @@ function App() {
   useEffect(() => {
     const buscarDados = async () => {
       try {
-        const res = await axios.get(`${API_URL}/caixas`);
+        const res = await axios.get(`${API_URL}/caixas`, {
+          headers: {
+            "ngrok-skip-browser-warning": "true", // 👈 isso pula a página de aviso
+          },
+        });
         setDadosBrutos(res.data);
       } catch (err) {
         console.error("Erro ao buscar dados:", err);
