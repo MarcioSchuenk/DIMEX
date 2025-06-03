@@ -9,5 +9,5 @@ export const salaNobreRoutes = Router();
 
 const salaNobreControllers = new SalaNobreController();
 
-salaNobreRoutes.post("/", verifyToken.execute, verifyRole(["ADMIN", "NOBRE"]), IsValidBody.execute({ body: createCaixasSchema}), salaNobreControllers.createCaixas);
-salaNobreRoutes.get("/", verifyToken.execute, verifyRole(["ADMIN", "NOBRE"]), salaNobreControllers.getCaixas);
+salaNobreRoutes.post("/", IsValidBody.execute({ body: createCaixasSchema}), salaNobreControllers.createCaixas);
+salaNobreRoutes.get("/", salaNobreControllers.getCaixas);
