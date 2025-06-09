@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #181515d8;
+}
+
+.main {
+  flex: 1;
+  transition: margin 0.5s ease;
+  overflow-x: hidden;
+  height: 100%;
+}
