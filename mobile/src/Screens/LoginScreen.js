@@ -70,6 +70,7 @@ export const LoginScreen = ({ navigation }) => {
     Keyboard.dismiss();
   };
 
+  
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView

@@ -6,6 +6,8 @@ export const api = axios.create({
   baseURL: API_URL,
 });
 
+console.log("API_URL:", API_URL);
+
 api.interceptors.request.use(async (config) => {
   try {
     const stored = await AsyncStorage.getItem("@auth");
