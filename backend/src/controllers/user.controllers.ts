@@ -33,13 +33,13 @@ export class UserControllers {
     res.status(200).json(users);
   }
 
-    async updateUser(req: Request, res: Response): Promise<void> {
-        const userService = container.resolve(UserServices);
-        const userId = res.locals.decode?.id;
-        const data = req.body;
+  async updateUser(req: Request, res: Response): Promise<void> {
+    const userService = container.resolve(UserServices);
+    const userId = res.locals.decode?.id;
+    const data = req.body;
     
-        const user = await userService.updateUser(userId, data);
+    const user = await userService.updateUser(userId, data);
     
-        res.status(200).json(user);
-    }
+    res.status(200).json(user);
+  }
 }

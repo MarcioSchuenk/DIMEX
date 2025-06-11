@@ -8,7 +8,9 @@ import { PacotesBarChart } from "../PacotesBarChart/PacotesBarChart";
 import styles from "./styles.module.scss";
 
 const API_URL = import.meta.env.VITE_API_URL;
-const socket = io(API_URL);
+const socket = io(API_URL, {
+  transports: ["websocket"],
+});
 
 export const SalaNobre = () => {
   const [dataSelecionada, setDataSelecionada] = useState("");

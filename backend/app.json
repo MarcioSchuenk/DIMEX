@@ -1,12 +1,65 @@
 {
   "expo": {
-    "extra": {
-      "eas": {
-        "projectId": "8cdda521-4839-4d25-b32e-4d03990841ec"
+    "name": "DIMEX",
+    "slug": "snack-6410b457-cf14-45cd-af0b-1ce416e5d75e",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./src/assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O aplicativo precisa acessar suas fotos para anexar imagens aos documentos.",
+          "cameraPermission": "O aplicativo precisa acessar sua câmera para fotografar documentos."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Precisamos acessar sua câmera para fotografar documentos e comprovantes."
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Precisamos acessar sua câmera para fotografar documentos e comprovantes",
+        "NSPhotoLibraryUsageDescription": "Precisamos acessar sua galeria para selecionar imagens de documentos",
+        "NSPhotoLibraryAddUsageDescription": "Precisamos salvar fotos tiradas no aplicativo"
       }
     },
     "android": {
-      "package": "com.marcio.bastos.backend"
+      "usesCleartextTraffic": true,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.marcio.schuenk.snack6410b457cf1445cdaf0b1ce416e5d75e"
+    },
+    "web": {
+      "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "20828e8e-dbdc-495b-8295-732ecc754c31"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
