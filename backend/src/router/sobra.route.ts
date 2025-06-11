@@ -3,6 +3,7 @@ import { SobrasController } from "../controllers/sobras.controllers";
 import { IsValidBody } from "../middleware/isValidBody.middleware";
 import { createSobrasSchema } from "../schemas/sobras.schemas";
 import { verifyToken } from "../middleware/verifyToken.middleware";
+import { verifyRole } from "../middleware/verifyRole.middleware";
 
 export const sobrasRoutes = Router();
 

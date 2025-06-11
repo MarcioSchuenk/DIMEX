@@ -1,10 +1,21 @@
-import { RoutesMain } from "./routes/RoutesMain";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Legend,
+  LabelList,
+} from "recharts";
+import "./styles/app.scss";
+import { io } from "socket.io-client";
 
-<<<<<<< Updated upstream
 const API_URL = import.meta.env.VITE_API_URL;
-const socket = io(API_URL, {
-  transports: ["websocket"],
-});
+const socket = io(API_URL);
 
 const gerarHoras = () => {
   const horas = [];
@@ -15,7 +26,7 @@ const gerarHoras = () => {
 };
 
 function App() {
-  const [dataSelecionada, setDataSelecionada] = useState("");
+  const [dataSelecionada, setDataSelecionada] = useState("2025-05-21");
   const [dadosBrutos, setDadosBrutos] = useState([]);
   const [dadosPorHora, setDadosPorHora] = useState([]);
   const [estatisticas, setEstatisticas] = useState({
@@ -36,11 +47,7 @@ function App() {
   useEffect(() => {
     const buscarDados = async () => {
       try {
-        const res = await axios.get(`${API_URL}/caixas`, {
-          headers: {
-            "ngrok-skip-browser-warning": "true", // 👈 isso pula a página de aviso
-          },
-        });
+        const res = await axios.get(`${API_URL}/caixas`);
         setDadosBrutos(res.data);
       } catch (err) {
         console.error("Erro ao buscar dados:", err);
@@ -217,8 +224,3 @@ function App() {
 }
 
 export default App;
-=======
-export const App = () => {
-  return <RoutesMain />;
-};
->>>>>>> Stashed changes
