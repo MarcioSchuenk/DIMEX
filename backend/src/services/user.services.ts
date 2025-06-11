@@ -60,7 +60,7 @@ export class UserServices {
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET as string,
-      { expiresIn: "365d" }
+      { expiresIn: "30d" }
     );
 
     const { password, ...userWithoutPassword } = user;
