@@ -64,12 +64,17 @@ export const SalaNobre = () => {
 
     const total = filtrados.length;
     const media = +(total / horas.length).toFixed(1);
-    const pico = formatados.reduce((a, b) => (b.pacotes > a.pacotes ? b : a), {
-      pacotes: -1,
-    });
-    const menor = formatados.reduce((a, b) => (b.pacotes < a.pacotes ? b : a), {
-      pacotes: Infinity,
-    });
+
+    const maiores = formatados.filter((item) => item.pacotes > 0);
+    const pico = maiores.length
+      ? maiores.reduce((a, b) => (b.pacotes > a.pacotes ? b : a))
+      : { pacotes: 0, hora: "--" };
+
+      
+    const menores = formatados.filter((item) => item.pacotes > 0);
+    const menor = menores.length
+      ? menores.reduce((a, b) => (b.pacotes < a.pacotes ? b : a))
+      : { pacotes: 0, hora: "--" };
 
     setDadosPorHora(formatados);
     setEstatisticas({ total, media, pico, menor });
@@ -80,7 +85,6 @@ export const SalaNobre = () => {
       <DataSelector
         dataSelecionada={dataSelecionada}
         onChange={setDataSelecionada}
-
       />
       <div className={styles.cardsGrid}>
         <StatsCard
