@@ -6,9 +6,6 @@ import jwt from "jsonwebtoken";
 
 @injectable()
 export class UserServices {
-  getUser(userId: any) {
-    throw new Error("Method not implemented.");
-  }
   async createUser(body: IUser) {
     if (!body.login) {
       throw new Error("Login is required");
@@ -42,7 +39,7 @@ export class UserServices {
     if (!body.login) {
       throw new Error("Login is required");
     }
-
+    
     if (!body.password) {
       throw new Error("Password is required");
     }
@@ -63,14 +60,14 @@ export class UserServices {
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET as string,
-      { expiresIn: "7d" }
+      { expiresIn: "30d" }
     );
 
     const { password, ...userWithoutPassword } = user;
     return { accessToken: token, user: userWithoutPassword };
   }
 
-  async getMe(userId: number) {
+  async getUser(userId: number) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });

@@ -1,59 +1,74 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { auth } from "../config/firebase.config";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 
 const AuthContext = createContext();
-const API_URL = import.meta.env.VITE_API_URL;
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // garante que app só renderize depois do Firebase verificar
 
-  // Autologin com cookie
   useEffect(() => {
-    const checkLogin = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/users/me`);
-        setUser(res.data.user);
-      } catch {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      const expiresAt = localStorage.getItem("expiresAt");
+
+      if (firebaseUser && expiresAt) {
+        const now = new Date();
+        const expiresDate = new Date(expiresAt);
+
+        if (now < expiresDate) {
+          setUser(firebaseUser);
+        } else {
+          logout();
+        }
+      } else {
         setUser(null);
       }
-    };
 
-    checkLogin();
+      setLoading(false); // fim da checagem
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const login = async ({ login, password }) => {
     try {
-      const response = await axios.post(
-        `${API_URL}/users/login`,
-        { login, password },
-        { withCredentials: true }
+      await setPersistence(auth, browserLocalPersistence); // mantém sessão mesmo com F5 ou fechamento
+
+      const { user: firebaseUser } = await signInWithEmailAndPassword(
+        auth,
+        login,
+        password
       );
 
-      setUser(response.data.user);
+      // Sessão válida por 7 dias
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 7);
+      localStorage.setItem("expiresAt", expiresAt.toISOString());
+
+      setUser(firebaseUser);
       navigate("/");
     } catch (error) {
-      alert(
-        "Erro ao fazer login: " +
-          (error.response?.data?.message || error.message)
-      );
+      alert("Erro ao fazer login: " + error.message);
     }
   };
 
   const logout = async () => {
-    try {
-      await axios.post(`${API_URL}/users/logout`, null, {
-        withCredentials: true,
-      });
-      setUser(null);
-      navigate("/login");
-    } catch (error) {
-      alert(
-        "Erro ao sair: " + (error.response?.data?.message || error.message)
-      );
-    }
+    await signOut(auth);
+    setUser(null);
+    localStorage.removeItem("expiresAt");
+    navigate("/login");
   };
+
+  if (loading) return null; // ou um spinner de carregamento
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

@@ -4,23 +4,34 @@ import styles from "./styles.module.scss";
 
 export const LoginForm = () => {
   const { login: fazerLogin } = useAuth();
-  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    await fazerLogin({ login, password });
+    setLoading(true);
+    setError("");
+
+    try {
+      await fazerLogin({ login: email, password });
+    } catch (err) {
+      setError("Erro ao fazer login. Verifique suas credenciais.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <form onSubmit={handleLogin} className={styles.form}>
       <div>
-        <label htmlFor="login">Usuário</label>
+        <label htmlFor="email">E-mail</label>
         <input
-          type="text"
-          id="login"
-          value={login}
-          onChange={(e) => setLogin(e.target.value)}
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>
@@ -36,7 +47,11 @@ export const LoginForm = () => {
         />
       </div>
 
-      <button type="submit">Entrar</button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <button type="submit" disabled={loading}>
+        {loading ? "Entrando..." : "Entrar"}
+      </button>
     </form>
   );
 };
