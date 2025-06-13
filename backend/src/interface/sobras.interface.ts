@@ -8,3 +8,9 @@ export interface Sobras_Interface {
     created_at: Date;
     updated_at: Date;
 }
+
+
+export interface FiltroSobras {
+    data?: string;
+    codigoProduto?: string;
+}

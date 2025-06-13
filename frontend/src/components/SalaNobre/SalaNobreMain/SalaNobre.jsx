@@ -24,6 +24,8 @@ export const SalaNobre = () => {
   });
   const [forcarAtualizacao, setForcarAtualizacao] = useState(false);
 
+  console.log(dataSelecionada)
+
   useEffect(() => {
     const buscarDados = async () => {
       try {

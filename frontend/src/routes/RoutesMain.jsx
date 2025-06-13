@@ -3,6 +3,7 @@ import { LoginPage } from "../pages/LoginPage";
 import { MainPage } from "../pages/MainPage";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import { SalaNobrePage } from "../pages/SalaNobrePage";
+import { SobrasPage } from "../pages/SobrasPage";
 
 export const RoutesMain = () => {
   return (
@@ -11,6 +12,7 @@ export const RoutesMain = () => {
       <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<MainPage />}>
           <Route path="/fluxo_nobre" element={<SalaNobrePage />} />
+          <Route path="/sobras" element={<SobrasPage />} />
         </Route>
       </Route>
     </Routes>

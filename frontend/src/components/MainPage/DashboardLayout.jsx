@@ -8,7 +8,6 @@ export const DashboardLayout = ({ children }) => {
       <Sidebar />
       <main className={styles.main}>
         {children}
-
         <Outlet />
       </main>
     </div>

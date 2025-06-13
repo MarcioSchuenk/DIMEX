@@ -1,0 +1,12 @@
+.inputCodigo {
+  width: 140px;
+  height: 36px;
+  padding: 0.5rem;
+  border: 3px solid #00c17c;
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+.inputCodigo::placeholder {
+  font-size: 13px;
+}

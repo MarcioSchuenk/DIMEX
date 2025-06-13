@@ -9,4 +9,4 @@ export const sobrasRoutes = Router();
 const sobrasControllers = new SobrasController();
 
 sobrasRoutes.post("/", verifyToken.execute, IsValidBody.execute({ body: createSobrasSchema}), sobrasControllers.createSobras);
-sobrasRoutes.get("/", verifyToken.execute, sobrasControllers.getAllSobras);
+sobrasRoutes.get("/",  sobrasControllers.getAllSobras);

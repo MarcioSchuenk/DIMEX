@@ -4,6 +4,7 @@ import { IsValidBody } from "../middleware/isValidBody.middleware";
 import { createUserSchema, userLoginSchema } from "../schemas/userSchema.schema";
 import { verifyToken } from "../middleware/verifyToken.middleware";
 import { verifyRole } from "../middleware/verifyRole.middleware";
+import { verifyTokenFromCookie } from "../middleware/verifyTokenFromCookie.middlware";
 
 export const userRoutes = Router()
 
@@ -13,7 +14,7 @@ userRoutes.post("/", IsValidBody.execute({ body: createUserSchema }), userContro
 
 userRoutes.post("/login", IsValidBody.execute({ body: userLoginSchema }), userControllers.loginUser)
 
-userRoutes.get("/profile", verifyToken.execute, verifyRole("ADMIN"),  userControllers.getUser)
+userRoutes.get("/me", verifyTokenFromCookie.execute, userControllers.getMe)
 
 userRoutes.get("/", verifyToken.execute, verifyRole("ADMIN"), userControllers.getAllUsers)
 

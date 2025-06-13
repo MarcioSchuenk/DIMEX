@@ -20,12 +20,7 @@ export const Sidebar = () => {
   return (
     <>
       {/* BACKDROP (opcional para mobile) */}
-      {isActive && (
-        <div
-          className={styles.backdrop}
-          onClick={toggleSidebar}
-        />
-      )}
+      {isActive && <div className={styles.backdrop} onClick={toggleSidebar} />}
 
       <div className={`${styles.sidebar} ${isActive ? styles.active : ""}`}>
         <div className={styles.logo_content}>
@@ -55,12 +50,20 @@ export const Sidebar = () => {
             <span className={styles.tooltip}>Expedição</span>
           </li>
           {isActive && openCard === "expedicao" && (
-            <li className={styles.subItem}>
-              <Link to="/fluxo_nobre">
-                <i className="bx bx-right-arrow"></i>
-                <span className={styles.links_name}>Fluxo Sala Nobre</span>
-              </Link>
-            </li>
+            <>
+              <li className={styles.subItem}>
+                <Link to="/fluxo_nobre">
+                  <i className="bx bx-right-arrow"></i>
+                  <span className={styles.links_name}>Fluxo Sala Nobre</span>
+                </Link>
+              </li>
+              <li className={styles.subItem}>
+                <Link to="/sobras">
+                  <i className="bx bx-right-arrow"></i>
+                  <span className={styles.links_name}>Sobras Carregamento</span>
+                </Link>
+              </li>
+            </>
           )}
 
           {/* Rodoviário */}
@@ -97,9 +100,7 @@ export const Sidebar = () => {
               <span className={styles.arrow_toggle}>
                 <i
                   className={`bx ${
-                    openCard === "oficina"
-                      ? "bx-chevron-up"
-                      : "bx-chevron-down"
+                    openCard === "oficina" ? "bx-chevron-up" : "bx-chevron-down"
                   }`}
                 ></i>
               </span>

@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import helmet from "helmet";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import express, { json } from "express";
 import "express-async-errors";
 import { sobrasRoutes } from "./router/sobra.route";
@@ -12,7 +13,12 @@ export const app = express();
 
 app.use(helmet());
 
-app.use(cors());
+app.use(cookieParser());
+
+app.use(cors({
+    origin: "https://dimex-nu.vercel.app",
+    credentials: true,
+}));
 
 app.use(json());
 

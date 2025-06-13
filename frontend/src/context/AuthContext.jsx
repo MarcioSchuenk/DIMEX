@@ -9,28 +9,29 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
-  // Ao iniciar, tenta carregar o usuário do localStorage
+  // Autologin com cookie
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const checkLogin = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/users/me`);
+        setUser(res.data.user);
+      } catch {
+        setUser(null);
+      }
+    };
+
+    checkLogin();
   }, []);
 
   const login = async ({ login, password }) => {
     try {
-      const response = await axios.post(`${API_URL}/users/login`, {
-        login,
-        password,
-      });
+      const response = await axios.post(
+        `${API_URL}/users/login`,
+        { login, password },
+        { withCredentials: true }
+      );
 
-      const { accessToken, user } = response.data;
-
-      // Salva o token e o usuário localmente
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      setUser(user);
+      setUser(response.data.user);
       navigate("/");
     } catch (error) {
       alert(
@@ -40,11 +41,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-    navigate("/login");
+  const logout = async () => {
+    try {
+      await axios.post(`${API_URL}/users/logout`, null, {
+        withCredentials: true,
+      });
+      setUser(null);
+      navigate("/login");
+    } catch (error) {
+      alert(
+        "Erro ao sair: " + (error.response?.data?.message || error.message)
+      );
+    }
   };
 
   return (

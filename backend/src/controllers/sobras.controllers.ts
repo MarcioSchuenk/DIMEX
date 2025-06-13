@@ -13,8 +13,14 @@ export class SobrasController {
   }
 
   async getAllSobras(req: Request, res: Response) {
+    const { data, codigoProduto } = req.query;
+
     const sobrasServices = container.resolve(SobrasServices);
-    const response = await sobrasServices.getAllSobras();
+
+    const response = await sobrasServices.getAllSobras({
+      data: data as string,
+      codigoProduto: codigoProduto as string,
+    });
 
     res.status(200).json(response);
   }
