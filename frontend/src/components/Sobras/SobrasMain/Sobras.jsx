@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DataSelector } from "../../../components/SalaNobre/DataSelector/DataSelector";
 import { CodigoSelector } from "../CodigoSelector/CodSelector";
-import { Modal } from "../Modal/modal";
+import { Modal } from "../Modal/Modal";
 import api from "../../../services/api";
 import styles from "./styles.module.scss";
 
