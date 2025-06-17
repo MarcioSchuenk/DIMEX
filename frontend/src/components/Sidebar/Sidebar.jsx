@@ -57,12 +57,12 @@ export const Sidebar = () => {
                   <span className={styles.links_name}>Fluxo Sala Nobre</span>
                 </Link>
               </li>
-              <li className={styles.subItem}>
+              {/* <li className={styles.subItem}>
                 <Link to="/sobras">
                   <i className="bx bx-right-arrow"></i>
                   <span className={styles.links_name}>Sobras Carregamento</span>
                 </Link>
-              </li>
+              </li> */}
             </>
           )}
 

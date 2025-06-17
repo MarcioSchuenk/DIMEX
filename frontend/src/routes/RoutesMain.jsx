@@ -12,7 +12,7 @@ export const RoutesMain = () => {
       <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<MainPage />}>
           <Route path="/fluxo_nobre" element={<SalaNobrePage />} />
-          <Route path="/sobras" element={<SobrasPage />} />
+          {/* <Route path="/sobras" element={<SobrasPage />} /> */}
         </Route>
       </Route>
     </Routes>

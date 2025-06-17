@@ -1,24 +1,34 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Modal, FlatList } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Modal,
+  FlatList,
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { api } from "../services/api"; // Certifique-se de que o caminho está correto
 
 export default function SobrasCarregamentoScreen() {
   const [formData, setFormData] = useState({
-    data: new Date().toLocaleDateString('pt-BR'), // Data atual por padrão
-    codigo: '',
-    quantidade: '',
-    cancelado: '',
-    descricao: '',
-    local: '', // Local vazio por padrão
-    ondeQual: '',
-    quadrante: ''
+    data: new Date().toLocaleDateString("pt-BR"), // Data atual por padrão
+    codigo: "",
+    quantidade: "",
+    cancelado: "",
+    descricao: "",
+    local: "",
+    ondeQual: "",
+    quadrante: "",
   });
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalType, setModalType] = useState('');
+  const [modalType, setModalType] = useState("");
   const [options, setOptions] = useState([]);
-  const [selectedField, setSelectedField] = useState('');
+  const [selectedField, setSelectedField] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -30,8 +40,8 @@ export default function SobrasCarregamentoScreen() {
   };
 
   const handleConfirm = (date) => {
-    const formattedDate = date.toLocaleDateString('pt-BR');
-    setFormData(prev => ({...prev, data: formattedDate}));
+    const formattedDate = date.toLocaleDateString("pt-BR");
+    setFormData((prev) => ({ ...prev, data: formattedDate }));
     hideDatePicker();
   };
 
@@ -43,33 +53,72 @@ export default function SobrasCarregamentoScreen() {
   };
 
   const handleSelectOption = (value) => {
-    setFormData(prev => ({...prev, [selectedField]: value}));
+    setFormData((prev) => ({ ...prev, [selectedField]: value }));
     setModalVisible(false);
   };
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({...prev, [field]: value}));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = () => {
-    console.log('Dados enviados:', formData);
-    alert('Registro salvo com sucesso!');
+  const handleSubmit = async () => {
+    try {
+      // Mapeando os campos para o que a API espera
+      const payload = {
+        codigo: formData.codigo,
+        quantidade: parseInt(formData.quantidade) || 0,
+        pedido_cancelado: formData.cancelado,
+        localizacao: formData.local,
+        onde_qual: formData.ondeQual,
+        quadrante: formData.quadrante,
+        description: formData.descricao,
+      };
+
+      console.log("Enviando para API:", payload);
+
+      const response = await api.post("/sobras", payload);
+
+      alert("Registro salvo com sucesso!");
+
+      // Resetar o formulário
+      setFormData({
+        data: new Date().toLocaleDateString("pt-BR"),
+        codigo: "",
+        quantidade: "",
+        cancelado: "",
+        descricao: "",
+        local: "",
+        ondeQual: "",
+        quadrante: "",
+      });
+    } catch (error) {
+      console.error(
+        "Erro ao enviar dados:",
+        error.response?.data || error.message
+      );
+      alert("Erro ao salvar registro. Verifique os dados e tente novamente.");
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Registro de Sobras - Carregamento</Text>
-      
+
       <View style={styles.card}>
         <View style={styles.formGroup}>
           <Text style={styles.label}>Data</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.inputContainer}
             onPress={showDatePicker}
           >
-            <MaterialIcons name="event" size={20} color="#4CAF50" style={styles.inputIcon} />
+            <MaterialIcons
+              name="event"
+              size={20}
+              color="#4CAF50"
+              style={styles.inputIcon}
+            />
             <Text style={styles.input}>
-              {formData.data || 'Selecione uma data'}
+              {formData.data || "Selecione uma data"}
             </Text>
           </TouchableOpacity>
           <DateTimePickerModal
@@ -90,11 +139,16 @@ export default function SobrasCarregamentoScreen() {
         <View style={styles.formGroup}>
           <Text style={styles.label}>Código/Marca</Text>
           <View style={styles.inputContainer}>
-            <MaterialIcons name="code" size={20} color="#4CAF50" style={styles.inputIcon} />
+            <MaterialIcons
+              name="code"
+              size={20}
+              color="#4CAF50"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               value={formData.codigo}
-              onChangeText={(text) => handleChange('codigo', text)}
+              onChangeText={(text) => handleChange("codigo", text)}
               placeholder="Ex: 123456"
               placeholderTextColor="#9E9E9E"
             />
@@ -104,11 +158,16 @@ export default function SobrasCarregamentoScreen() {
         <View style={styles.formGroup}>
           <Text style={styles.label}>Quantidade</Text>
           <View style={styles.inputContainer}>
-            <MaterialIcons name="format-list-numbered" size={20} color="#4CAF50" style={styles.inputIcon} />
+            <MaterialIcons
+              name="format-list-numbered"
+              size={20}
+              color="#4CAF50"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               value={formData.quantidade}
-              onChangeText={(text) => handleChange('quantidade', text)}
+              onChangeText={(text) => handleChange("quantidade", text)}
               keyboardType="numeric"
               placeholder="Ex: 5"
               placeholderTextColor="#9E9E9E"
@@ -120,13 +179,22 @@ export default function SobrasCarregamentoScreen() {
           <Text style={styles.label}>Pedido cancelado?(Sim/Não)</Text>
           <TouchableOpacity
             style={styles.selectInput}
-            onPress={() => openModal('Cancelado', ['Sim', 'Não'], 'cancelado')}
+            onPress={() => openModal("Cancelado", ["Sim", "Não"], "cancelado")}
           >
-            <MaterialIcons name="cancel" size={20} color="#4CAF50" style={styles.inputIcon} />
+            <MaterialIcons
+              name="cancel"
+              size={20}
+              color="#4CAF50"
+              style={styles.inputIcon}
+            />
             <Text style={styles.selectText}>
-              {formData.cancelado || 'Selecione uma opção'}
+              {formData.cancelado || "Selecione uma opção"}
             </Text>
-            <MaterialIcons name="keyboard-arrow-down" size={20} color="#757575" />
+            <MaterialIcons
+              name="keyboard-arrow-down"
+              size={20}
+              color="#757575"
+            />
           </TouchableOpacity>
         </View>
 
@@ -134,22 +202,44 @@ export default function SobrasCarregamentoScreen() {
           <Text style={styles.label}>Local</Text>
           <TouchableOpacity
             style={styles.selectInput}
-            onPress={() => openModal('Local', ['Baia', 'Carrinho', 'Bancada', 'Rua'], 'local')}
+            onPress={() =>
+              openModal(
+                "Local",
+                ["Baia", "Carrinho", "Bancada", "Rua"],
+                "local"
+              )
+            }
           >
-            <MaterialIcons name="location-on" size={20} color="#4CAF50" style={styles.inputIcon} />
-            <Text style={styles.selectText}>{formData.local || 'Selecione uma opção'}</Text>
-            <MaterialIcons name="keyboard-arrow-down" size={20} color="#757575" />
+            <MaterialIcons
+              name="location-on"
+              size={20}
+              color="#4CAF50"
+              style={styles.inputIcon}
+            />
+            <Text style={styles.selectText}>
+              {formData.local || "Selecione uma opção"}
+            </Text>
+            <MaterialIcons
+              name="keyboard-arrow-down"
+              size={20}
+              color="#757575"
+            />
           </TouchableOpacity>
         </View>
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Onde/Qual?</Text>
           <View style={styles.inputContainer}>
-            <MaterialIcons name="pin-drop" size={20} color="#4CAF50" style={styles.inputIcon} />
+            <MaterialIcons
+              name="pin-drop"
+              size={20}
+              color="#4CAF50"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               value={formData.ondeQual}
-              onChangeText={(text) => handleChange('ondeQual', text)}
+              onChangeText={(text) => handleChange("ondeQual", text)}
               placeholder="Ex: Baia 01, Rua G, Carrinho..."
               placeholderTextColor="#9E9E9E"
             />
@@ -159,11 +249,16 @@ export default function SobrasCarregamentoScreen() {
         <View style={styles.formGroup}>
           <Text style={styles.label}>Quadrante/Local</Text>
           <View style={styles.inputContainer}>
-            <MaterialIcons name="grid-on" size={20} color="#4CAF50" style={styles.inputIcon} />
+            <MaterialIcons
+              name="grid-on"
+              size={20}
+              color="#4CAF50"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               value={formData.quadrante}
-              onChangeText={(text) => handleChange('quadrante', text)}
+              onChangeText={(text) => handleChange("quadrante", text)}
               placeholder="Ex: Setor A, Ponto B"
               placeholderTextColor="#9E9E9E"
             />
@@ -173,16 +268,16 @@ export default function SobrasCarregamentoScreen() {
         <View style={styles.formGroup}>
           <Text style={styles.label}>Descrição</Text>
           <View style={[styles.inputContainer, styles.textAreaContainer]}>
-            <MaterialIcons 
-              name="description" 
-              size={20} 
-              color="#4CAF50" 
-              style={[styles.inputIcon, styles.textAreaIcon]} 
+            <MaterialIcons
+              name="description"
+              size={20}
+              color="#4CAF50"
+              style={[styles.inputIcon, styles.textAreaIcon]}
             />
             <TextInput
               style={[styles.input, styles.textArea]}
               value={formData.descricao}
-              onChangeText={(text) => handleChange('descricao', text)}
+              onChangeText={(text) => handleChange("descricao", text)}
               multiline
               placeholder="Descreva detalhadamente..."
               placeholderTextColor="#9E9E9E"
@@ -194,7 +289,12 @@ export default function SobrasCarregamentoScreen() {
 
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>SALVAR</Text>
-        <MaterialIcons name="save" size={20} color="#FFFFFF" style={styles.buttonIcon} />
+        <MaterialIcons
+          name="save"
+          size={20}
+          color="#FFFFFF"
+          style={styles.buttonIcon}
+        />
       </TouchableOpacity>
 
       <Modal visible={modalVisible} transparent animationType="fade">
@@ -216,7 +316,7 @@ export default function SobrasCarregamentoScreen() {
                 </TouchableOpacity>
               )}
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.modalCancelButton}
               onPress={() => setModalVisible(false)}
             >
@@ -233,22 +333,22 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 16,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   header: {
     fontSize: 24,
-    fontWeight: '700',
-    color: '#2E7D32',
+    fontWeight: "700",
+    color: "#2E7D32",
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 20,
     marginBottom: 20,
     elevation: 2,
-    shadowColor: '#1B5E2040',
+    shadowColor: "#1B5E2040",
     shadowOpacity: 0.1,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
@@ -258,23 +358,23 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
-    color: '#424242',
+    color: "#424242",
     marginLeft: 8,
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: "#E0E0E0",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 14,
   },
   textAreaContainer: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     minHeight: 100,
   },
   inputIcon: {
@@ -286,15 +386,15 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#212121',
+    color: "#212121",
     includeFontPadding: false,
   },
   selectInput: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: "#E0E0E0",
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 12,
@@ -302,32 +402,32 @@ const styles = StyleSheet.create({
   selectText: {
     flex: 1,
     fontSize: 16,
-    color: '#212121',
+    color: "#212121",
     marginLeft: 8,
   },
   textArea: {
     height: 100,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
     paddingTop: 10,
-    verticalAlign: 'top',
+    verticalAlign: "top",
   },
   submitButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#4CAF50',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#4CAF50",
     padding: 16,
     borderRadius: 8,
     elevation: 3,
-    shadowColor: '#2E7D32',
+    shadowColor: "#2E7D32",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
   },
   submitButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginRight: 8,
   },
   buttonIcon: {
@@ -335,45 +435,45 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
     paddingHorizontal: 24,
   },
   modalContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
-    maxHeight: '70%',
+    maxHeight: "70%",
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
-    textAlign: 'center',
-    color: '#2E7D32',
+    textAlign: "center",
+    color: "#2E7D32",
   },
   modalOption: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE',
+    borderBottomColor: "#EEEEEE",
   },
   modalOptionText: {
     fontSize: 16,
-    color: '#424242',
+    color: "#424242",
   },
   modalCancelButton: {
     marginTop: 16,
     padding: 12,
     borderRadius: 8,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
+    backgroundColor: "#F5F5F5",
+    alignItems: "center",
   },
   modalCancelText: {
-    color: '#E53935',
-    fontWeight: '600',
+    color: "#E53935",
+    fontWeight: "600",
   },
 });
