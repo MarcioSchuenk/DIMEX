@@ -87,7 +87,7 @@ export const Sidebar = () => {
             <li>
               <Link to="https://app.pipefy.com/pipes/306350886" target="_blank">
                 <i className="bx bx-right-arrow"></i>
-                <span className={styles.links_name}>CRM Romaneio</span>
+                <span className={styles.links_name}>Romaneio</span>
               </Link>
             </li>
           )}
