@@ -82,7 +82,7 @@ export class UserServices {
   async getAllUsers() {
     const users = await prisma.user.findMany();
 
-    return users.map((user) => ({
+    return users.map((user: any) => ({
       ...user,
       password: undefined,
     }));
