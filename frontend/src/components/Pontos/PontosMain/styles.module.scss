@@ -1,0 +1,343 @@
+// Variáveis de cor atualizadas
+$cor-primaria: #1a1a1a;
+$cor-secundaria: #00d68f;
+$cor-texto: #2d3748;
+$cor-texto-claro: #f8fafc;
+$cor-borda: #e2e8f0;
+$cor-fundo: #f5f7fa;
+$cor-fundo-card: #ffffff;
+$sombra: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+$sombra-destaque: 0 20px 25px -5px rgba(0, 214, 143, 0.1), 0 10px 10px -5px rgba(0, 214, 143, 0.04);
+
+// Mixins atualizados
+@mixin transition($prop: all, $time: 0.25s, $ease: cubic-bezier(0.4, 0, 0.2, 1)) {
+  transition: $prop $time $ease;
+}
+
+@mixin focus-ring {
+  box-shadow: 0 0 0 3px rgba($cor-secundaria, 0.3);
+}
+
+.container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  color: $cor-texto;
+  line-height: 1.6;
+}
+
+.header {
+  background-color: $cor-fundo-card;
+  border-radius: 12px;
+  padding: 2.5rem;
+  margin-bottom: 2.5rem;
+  box-shadow: $sombra;
+  border: 1px solid rgba($cor-borda, 0.5);
+}
+
+.titulo {
+  color: $cor-primaria;
+  margin: 0 0 1.75rem;
+  font-size: 2rem;
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 0.75rem;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    height: 4px;
+    background: linear-gradient(90deg, $cor-secundaria, lighten($cor-secundaria, 15%));
+    border-radius: 2px;
+  }
+}
+
+.filtrosContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  align-items: flex-end;
+}
+
+.filtroGroup {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+}
+
+.label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: lighten($cor-texto, 15%);
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+}
+
+.input {
+  padding: 0.875rem 1rem;
+  border: 1px solid $cor-borda;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  background-color: $cor-fundo-card;
+  @include transition;
+  line-height: 1.5;
+
+  &:focus {
+    outline: none;
+    border-color: $cor-secundaria;
+    @include focus-ring;
+  }
+}
+
+.inputText {
+  @extend .input;
+}
+
+.buscarBtn {
+  background: linear-gradient(135deg, $cor-secundaria, lighten($cor-secundaria, 5%));
+  color: $cor-texto-claro;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  @include transition;
+  margin-left: auto;
+  align-self: flex-end;
+  font-size: 0.9375rem;
+  letter-spacing: 0.025em;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $sombra-destaque;
+    
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    background: lighten($cor-secundaria, 25%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.resultadosContainer {
+  background-color: $cor-fundo-card;
+  border-radius: 12px;
+  padding: 2.5rem;
+  box-shadow: $sombra;
+  border: 1px solid rgba($cor-borda, 0.5);
+}
+
+.tableContainer {
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 1.5rem;
+  min-width: 800px;
+
+  thead {
+    background: linear-gradient(135deg, $cor-primaria, lighten($cor-primaria, 5%));
+    color: $cor-texto-claro;
+    position: sticky;
+    top: 0;
+
+    th {
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: 0.025em;
+      border-bottom: none;
+
+      &:first-child {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: all 0.2s ease;
+      border-bottom: 1px solid $cor-borda;
+
+      &:nth-child(even) {
+        background-color: rgba($cor-fundo, 0.6);
+      }
+
+      &:hover {
+        background-color: rgba($cor-secundaria, 0.05);
+        transform: translateX(2px);
+      }
+
+      td {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid $cor-borda;
+        font-size: 1rem;
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+}
+
+.paginacaoBtn {
+  background-color: transparent;
+  color: $cor-primaria;
+  border: 1px solid $cor-borda;
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  @include transition;
+  font-weight: 500;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover:not(:disabled) {
+    background-color: rgba($cor-secundaria, 0.1);
+    border-color: $cor-secundaria;
+    color: $cor-secundaria;
+  }
+
+  &:disabled {
+    color: lighten($cor-primaria, 50%);
+    border-color: lighten($cor-borda, 5%);
+    cursor: not-allowed;
+  }
+}
+
+.paginaInfo {
+  font-weight: 500;
+  min-width: 140px;
+  text-align: center;
+  color: lighten($cor-texto, 15%);
+  font-size: 0.875rem;
+}
+
+.semResultados {
+  text-align: center;
+  padding: 3rem;
+  color: lighten($cor-texto, 40%);
+  font-size: 1.125rem;
+  
+  &::before {
+    content: "😕";
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+}
+
+// Responsividade aprimorada
+@media (max-width: 1024px) {
+  .container {
+    padding: 2rem 1.25rem;
+  }
+  
+  .header, .resultadosContainer {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .header, .resultadosContainer {
+    padding: 1.75rem;
+    border-radius: 10px;
+  }
+  
+  .titulo {
+    font-size: 1.75rem;
+  }
+  
+  .filtrosContainer {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .filtroGroup {
+    width: 100%;
+  }
+
+  .buscarBtn {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+
+  .paginacao {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo {
+    font-size: 1.5rem;
+  }
+  
+  .table {
+    min-width: 100%;
+    
+    thead th, tbody td {
+      padding: 1rem;
+    }
+  }
+}

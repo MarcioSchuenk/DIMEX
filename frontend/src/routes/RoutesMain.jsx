@@ -3,7 +3,8 @@ import { LoginPage } from "../pages/LoginPage";
 import { MainPage } from "../pages/MainPage";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import { SalaNobrePage } from "../pages/SalaNobrePage";
-import { SobrasPage } from "../pages/SobrasPage";
+// import { SobrasPage } from "../pages/SobrasPage";
+import { PontosPage } from "../pages/PontosPage";
 
 export const RoutesMain = () => {
   return (
@@ -13,6 +14,7 @@ export const RoutesMain = () => {
         <Route path="/" element={<MainPage />}>
           <Route path="/fluxo_nobre" element={<SalaNobrePage />} />
           {/* <Route path="/sobras" element={<SobrasPage />} /> */}
+          <Route path="ponto" element={<PontosPage />} />
         </Route>
       </Route>
     </Routes>

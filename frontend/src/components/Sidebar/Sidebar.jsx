@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
 export const Sidebar = () => {
-  const [isActive, setIsActive] = useState(false); // começa fechado no mobile
+  const [isActive, setIsActive] = useState(false);
   const [openCard, setOpenCard] = useState(null);
 
   const toggleSidebar = () => {
@@ -57,6 +57,14 @@ export const Sidebar = () => {
                   <span className={styles.links_name}>Fluxo Sala Nobre</span>
                 </Link>
               </li>
+
+              <li className={styles.subItem}>
+                <Link to="https://dashboard-meid.vercel.app/" target="_blank">
+                  <i className="bx bx-right-arrow"></i>
+                  <span className={styles.links_name}>Dashboard Rua</span>
+                </Link>
+              </li>
+
               {/* <li className={styles.subItem}>
                 <Link to="/sobras">
                   <i className="bx bx-right-arrow"></i>
@@ -107,6 +115,31 @@ export const Sidebar = () => {
             </a>
             <span className={styles.tooltip}>Oficina</span>
           </li>
+
+          <li onClick={() => toggleCard("DP")}>
+            <a onClick={!isActive ? toggleSidebar : undefined}>
+              <i class="bx  bx-group"></i>
+              <span className={styles.links_name}>DP</span>
+              <span className={styles.arrow_toggle}>
+                <i
+                  className={`bx ${
+                    openCard === "DP" ? "bx-chevron-up" : "bx-chevron-down"
+                  }`}
+                ></i>
+              </span>
+            </a>
+            <span className={styles.tooltip}>Dp</span>
+          </li>
+          {isActive && openCard === "DP" && (
+            <>
+              <li className={styles.subItem}>
+                <Link to="/ponto">
+                  <i className="bx bx-right-arrow"></i>
+                  <span className={styles.links_name}>Pontos</span>
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
 
         <div className={styles.profile_content}>

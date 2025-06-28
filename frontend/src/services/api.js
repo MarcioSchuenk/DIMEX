@@ -6,7 +6,7 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     withCredentials: true,
-    "ngrok-skip-browser-warning": "true", // mantém se estiver usando ngrok
+    "ngrok-skip-browser-warning": "true",
   },
 });
 
