@@ -61,7 +61,14 @@ export const Sidebar = () => {
               <li className={styles.subItem}>
                 <Link to="https://dashboard-meid.vercel.app/" target="_blank">
                   <i className="bx bx-right-arrow"></i>
-                  <span className={styles.links_name}>Dashboard Rua</span>
+                  <span className={styles.links_name}>Resgistro Rua</span>
+                </Link>
+              </li>
+
+              <li className={styles.subItem}>
+                <Link to="/jirau">
+                  <i className="bx bx-right-arrow"></i>
+                  <span className={styles.links_name}>Colaboradores</span>
                 </Link>
               </li>
 

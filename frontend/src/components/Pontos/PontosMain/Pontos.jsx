@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import api from "../../../services/api";
+
+const ITENS_POR_PAGINA = 15;
 
 const RelatorioPontos = () => {
   const [dados, setDados] = useState([]);
@@ -11,6 +13,13 @@ const RelatorioPontos = () => {
   const [nomeFiltro, setNomeFiltro] = useState("");
   const [filtroAtivo, setFiltroAtivo] = useState(false);
   const [carregando, setCarregando] = useState(false);
+  const [mostrarApenasAtrasados, setMostrarApenasAtrasados] = useState(false);
+
+  const formatarData = (dataISO) => {
+    if (!dataISO) return "";
+    const [ano, mes, dia] = dataISO.split("-");
+    return `${dia}/${mes}/${ano}`;
+  };
 
   const fetchDados = async (paginaAtual = 1) => {
     if (!dataInicio || !dataFim) {
@@ -20,13 +29,13 @@ const RelatorioPontos = () => {
 
     setCarregando(true);
     try {
-      const response = await api.get("/pontos/", {
+      const response = await api.get("/pontos", {
         params: {
           inicio: formatarData(dataInicio),
           fim: formatarData(dataFim),
           page: paginaAtual,
-          limit: 10,
           nome: nomeFiltro || undefined,
+          filtrarAtrasos: mostrarApenasAtrasados ? "true" : undefined,
         },
       });
 
@@ -41,35 +50,16 @@ const RelatorioPontos = () => {
     }
   };
 
-  const formatarData = (dataISO) => {
-    const [ano, mes, dia] = dataISO.split("-");
-    return `${dia}/${mes}/${ano}`;
-  };
-
   const handleAnterior = () => {
-    if (pagina > 1) fetchDados(pagina - 1);
+    if (pagina > 1) {
+      fetchDados(pagina - 1);
+    }
   };
 
   const handleProxima = () => {
-    if (pagina < totalPaginas) fetchDados(pagina + 1);
-  };
-
-  const isAtraso = (idx, ponto) => {
-    if (idx !== 0) return false; // só verifica o primeiro ponto
-
-    const { Hora, Minuto } = ponto;
-
-    const faixaPermitida = [
-      { hora: 7, inicio: 6, fim: 54 },
-      { hora: 12, inicio: 6, fim: 54 },
-      { hora: 14, inicio: 6, fim: 54 },
-      { hora: 16, inicio: 6, fim: 54 },
-    ];
-
-    return faixaPermitida.some(
-      (faixa) =>
-        Hora === faixa.hora && Minuto >= faixa.inicio && Minuto <= faixa.fim
-    );
+    if (pagina < totalPaginas) {
+      fetchDados(pagina + 1);
+    }
   };
 
   return (
@@ -108,6 +98,19 @@ const RelatorioPontos = () => {
             />
           </div>
 
+          <div className={styles.filtroGroup}>
+            <label className={styles.label}>
+              <input
+                type="checkbox"
+                checked={mostrarApenasAtrasados}
+                onChange={() =>
+                  setMostrarApenasAtrasados(!mostrarApenasAtrasados)
+                }
+              />{" "}
+              Mostrar apenas atrasos
+            </label>
+          </div>
+
           <button
             onClick={() => fetchDados(1)}
             className={styles.buscarBtn}
@@ -135,7 +138,7 @@ const RelatorioPontos = () => {
                       <th>Ponto Entrada</th>
                       <th>Ponto Almoço/Janta</th>
                       <th>Ponto Volta</th>
-                      <th>Ponto Saida</th>
+                      <th>Ponto Saída</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -148,18 +151,20 @@ const RelatorioPontos = () => {
                             const hora = String(m.Hora).padStart(2, "0");
                             const minuto = String(m.Minuto).padStart(2, "0");
 
-                            const isAtrasado = isAtraso(idx, m);
+                            const mostrarAtraso = idx === 0 && ponto.atraso;
 
                             return (
                               <td
                                 key={idx}
                                 style={{
-                                  color: isAtrasado ? "red" : undefined,
-                                  fontWeight: isAtrasado ? "bold" : undefined,
+                                  color: mostrarAtraso ? "red" : undefined,
+                                  fontWeight: mostrarAtraso
+                                    ? "bold"
+                                    : undefined,
                                 }}
                               >
                                 {hora}:{minuto}
-                                {isAtrasado ? " ⚠️" : ""}
+                                {mostrarAtraso ? " ⚠️" : ""}
                               </td>
                             );
                           })}
