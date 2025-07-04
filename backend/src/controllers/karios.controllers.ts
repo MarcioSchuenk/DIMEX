@@ -1,27 +1,39 @@
 import { buscarFuncionariosKairos, buscarPontosKairos } from "../services/kairos.services";
 import { Request, Response } from "express";
-// req: Request, res: Response
-export const gerarRelatorioPontos = async () => {
-  // const {dataInicio, dataFim} = req.query;
+import dayjs from "dayjs";
 
-  // if (!dataInicio || !dataFim) {
-  //    return res.status(400).json({ error: "Parâmetros 'dataInicio' e 'dataFim' são obrigatórios." });
-  //  }
+function ajustarDataParaJornada(ponto: any): string {
+  const data = dayjs(`${ponto.Ano}-${ponto.Mes}-${ponto.Dia} ${ponto.Hora}:${ponto.Minuto}`);
+  return ponto.Hora < 4
+    ? data.subtract(1, 'day').format("DD/MM/YYYY")
+    : data.format("DD/MM/YYYY");
+}
 
-  const filtrarAtrasos = true;
+export const gerarRelatorioPontos = async (req: Request, res: Response): Promise<void> => {
+  let {dataInicio, dataFim, nome, filtrarAtrasos} = req.query;
 
+  if (!dataInicio || !dataFim) {
+    res.status(400).json({ error: "Parâmetros 'dataInicio' e 'dataFim' são obrigatórios." });
+  }
+  
   try {
     const funcionarios = await buscarFuncionariosKairos();
 
-    const matriculas = funcionarios.map((funcionario) => funcionario.Matricula);
+    const matriculas = funcionarios
+    .filter(funcionario => 
+      !nome || funcionario.Nome.toLowerCase().includes((nome as string).toLowerCase())
+    )
+    .map(funcionario => funcionario.Matricula);
 
-
-    const pontos = await buscarPontosKairos("30/06/2025" as string, "30/06/2025" as string, matriculas);
+    const pontos = await buscarPontosKairos(dataInicio as string, dataFim as string, matriculas);
 
     const pontosPorMatricula = new Map<number, any[]>();
 
     for (const ponto of pontos) {
       const matricula = Number(ponto.Matricula);
+
+      ponto.dataJornada = ajustarDataParaJornada(ponto);
+      
       if (!pontosPorMatricula.has(matricula)) {
         pontosPorMatricula.set(matricula, []);
       }
@@ -29,6 +41,8 @@ export const gerarRelatorioPontos = async () => {
     }
 
     const resultado = [];
+
+    const isFiltrarAtrasos = filtrarAtrasos === "true";
     
     for (const func of funcionarios) {
       const matricula = Number(func.Matricula);
@@ -36,7 +50,7 @@ export const gerarRelatorioPontos = async () => {
 
       if (pontosFuncionario.length === 0) continue;
 
-      if (filtrarAtrasos) {
+      if (isFiltrarAtrasos) {
         const primeiroPonto = pontosFuncionario[0];
         if (!primeiroPonto) continue;
 
@@ -53,9 +67,9 @@ export const gerarRelatorioPontos = async () => {
       });
     }
 
-    console.log(JSON.stringify(resultado, null, 2));
+    res.status(200).json(resultado)
   } catch (error) {
     console.error("Erro ao buscar pontos:", error);
-    // return res.status(500).json({ error: "Erro ao buscar pontos." });
+    res.status(500).json({ error: "Erro ao buscar pontos." });
   }
 }

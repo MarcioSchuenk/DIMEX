@@ -1,210 +1,148 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./styles.module.scss";
 import api from "../../../services/api";
+import { DataSelector } from "../../SalaNobre/DataSelector/DataSelector";
 
-const ITENS_POR_PAGINA = 15;
-
-const RelatorioPontos = () => {
+export const RelatorioPontos = () => {
   const [dados, setDados] = useState([]);
-  const [pagina, setPagina] = useState(1);
-  const [totalPaginas, setTotalPaginas] = useState(1);
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
-  const [nomeFiltro, setNomeFiltro] = useState("");
-  const [filtroAtivo, setFiltroAtivo] = useState(false);
-  const [carregando, setCarregando] = useState(false);
-  const [mostrarApenasAtrasados, setMostrarApenasAtrasados] = useState(false);
+  const [nome, setNome] = useState("");
+  const [filtrarAtrasos, setFiltrarAtrasos] = useState(false);
 
-  const formatarData = (dataISO) => {
-    if (!dataISO) return "";
-    const [ano, mes, dia] = dataISO.split("-");
-    return `${dia}/${mes}/${ano}`;
+  const dataFormatada = (data) => {
+    const dataFormat = data.split("-").reverse().join("/");
+    return dataFormat;
   };
 
-  const fetchDados = async (paginaAtual = 1) => {
-    if (!dataInicio || !dataFim) {
-      alert("Preencha as datas de início e fim");
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    setCarregando(true);
-    try {
-      const response = await api.get("/pontos", {
-        params: {
-          inicio: formatarData(dataInicio),
-          fim: formatarData(dataFim),
-          page: paginaAtual,
-          nome: nomeFiltro || undefined,
-          filtrarAtrasos: mostrarApenasAtrasados ? "true" : undefined,
-        },
-      });
+    const buscarDados = async () => {
+      try {
+        const params = {
+          dataInicio,
+          dataFim,
+          nome: nome || "",
+        };
+        if (filtrarAtrasos) {
+          params.filtrarAtrasos = true;
+        }
 
-      setDados(response.data.dados || []);
-      setTotalPaginas(response.data.totalPaginas || 1);
-      setPagina(paginaAtual);
-      setFiltroAtivo(true);
-    } catch (error) {
-      console.error("Erro ao buscar os dados:", error);
-    } finally {
-      setCarregando(false);
-    }
-  };
+        const res = await api.get("https://2092-200-225-228-145.ngrok-free.app/pontos", {
+          params,
+        });
 
-  const handleAnterior = () => {
-    if (pagina > 1) {
-      fetchDados(pagina - 1);
-    }
-  };
-
-  const handleProxima = () => {
-    if (pagina < totalPaginas) {
-      fetchDados(pagina + 1);
-    }
+        setDados(res.data);
+        console.log(res.data);
+      } catch (err) {
+        console.error("Erro ao buscar dados:", err);
+      }
+    };
+    buscarDados();
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h2 className={styles.titulo}>Relatório de Pontos</h2>
-        <div className={styles.filtrosContainer}>
+      <header className={styles.header}>
+        <h1 className={styles.titulo}>Relatório de Pontos</h1>
+
+        <form onSubmit={handleSubmit} className={styles.filtrosContainer}>
           <div className={styles.filtroGroup}>
             <label className={styles.label}>Data Início</label>
-            <input
-              type="date"
-              value={dataInicio}
-              onChange={(e) => setDataInicio(e.target.value)}
+            <DataSelector 
               className={styles.input}
+              dataSelecionada={dataInicio}
+              onChange={(dataInicio) => setDataInicio(dataFormatada(dataInicio))}
             />
           </div>
 
           <div className={styles.filtroGroup}>
             <label className={styles.label}>Data Fim</label>
-            <input
-              type="date"
-              value={dataFim}
-              onChange={(e) => setDataFim(e.target.value)}
+            <DataSelector 
               className={styles.input}
+              dataSelecionada={dataFim}
+              onChange={(dataFim) => setDataFim(dataFormatada(dataFim))}
             />
           </div>
 
           <div className={styles.filtroGroup}>
-            <label className={styles.label}>Nome (opcional)</label>
-            <input
-              type="text"
-              value={nomeFiltro}
-              onChange={(e) => setNomeFiltro(e.target.value)}
-              placeholder="Digite um nome"
+            <label className={styles.label}>Nome</label>
+            <input 
+              type="text" 
               className={styles.inputText}
+              onChange={(e) => setNome(e.target.value)}
+              placeholder="Digite o nome"
             />
           </div>
 
           <div className={styles.filtroGroup}>
             <label className={styles.label}>
-              <input
-                type="checkbox"
-                checked={mostrarApenasAtrasados}
-                onChange={() =>
-                  setMostrarApenasAtrasados(!mostrarApenasAtrasados)
-                }
-              />{" "}
-              Mostrar apenas atrasos
+              <input 
+                type="checkbox" 
+                id="atrasos" 
+                onChange={(e) => setFiltrarAtrasos(e.target.checked)}
+              />
+              Filtrar pelos atrasos
             </label>
           </div>
 
-          <button
-            onClick={() => fetchDados(1)}
-            className={styles.buscarBtn}
-            disabled={carregando}
-          >
-            {carregando ? "Buscando..." : "Buscar"}
-          </button>
-        </div>
-      </div>
+          <button type="submit" className={styles.buscarBtn}>Buscar</button>
+        </form>
+      </header>
 
-      {filtroAtivo && (
-        <div className={styles.resultadosContainer}>
-          {dados.length === 0 ? (
-            <div className={styles.semResultados}>
-              Nenhum resultado encontrado para os filtros aplicados
+      <div className={styles.resultadosContainer}>
+        {dados.length > 0 ? (
+          <>
+            <div className={styles.tableContainer}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Data</th>
+                    <th>Ponto 1</th>
+                    <th>Ponto 2</th>
+                    <th>Ponto 3</th>
+                    <th>Ponto 4</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dados.map((pessoa, index) => {
+                    const pontosFormatados = Array.from({ length: 4 }).map((_, i) => {
+                      const ponto = pessoa.pontos[i];
+                      if (!ponto) return "--:--";
+
+                      const hora = String(ponto.Hora).padStart(2, "0");
+                      const minuto = String(ponto.Minuto).padStart(2, "0");
+                      return `${hora}:${minuto}`;
+                    });
+
+                    const pontoExemplo = pessoa.pontos[0];
+                    const data = pontoExemplo
+                      ? `${String(pontoExemplo.Dia).padStart(2, "0")}/${String(pontoExemplo.Mes).padStart(2, "0")}/${pontoExemplo.Ano}`
+                      : "--/--/----";
+
+                    return (
+                      <tr key={index}>
+                        <td>{pessoa.nome}</td>
+                        <td>{data}</td>
+                        <td>{pontosFormatados[0]}</td>
+                        <td>{pontosFormatados[1]}</td>
+                        <td>{pontosFormatados[2]}</td>
+                        <td>{pontosFormatados[3]}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          ) : (
-            <>
-              <div className={styles.tableContainer}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Nome</th>
-                      <th>Data</th>
-                      <th>Ponto Entrada</th>
-                      <th>Ponto Almoço/Janta</th>
-                      <th>Ponto Volta</th>
-                      <th>Ponto Saída</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dados.map((funcionario) =>
-                      funcionario.pontos.map((ponto, index) => (
-                        <tr key={`${funcionario.matricula}-${index}`}>
-                          <td>{funcionario.nome}</td>
-                          <td>{ponto.data}</td>
-                          {ponto.marcacoes.slice(0, 4).map((m, idx) => {
-                            const hora = String(m.Hora).padStart(2, "0");
-                            const minuto = String(m.Minuto).padStart(2, "0");
-
-                            const mostrarAtraso = idx === 0 && ponto.atraso;
-
-                            return (
-                              <td
-                                key={idx}
-                                style={{
-                                  color: mostrarAtraso ? "red" : undefined,
-                                  fontWeight: mostrarAtraso
-                                    ? "bold"
-                                    : undefined,
-                                }}
-                              >
-                                {hora}:{minuto}
-                                {mostrarAtraso ? " ⚠️" : ""}
-                              </td>
-                            );
-                          })}
-                          {[...Array(4 - ponto.marcacoes.length)].map(
-                            (_, i) => (
-                              <td key={`empty-${i}`}>--:--</td>
-                            )
-                          )}
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className={styles.paginacao}>
-                <button
-                  onClick={handleAnterior}
-                  disabled={pagina === 1 || carregando}
-                  className={styles.paginacaoBtn}
-                >
-                  Anterior
-                </button>
-                <span className={styles.paginaInfo}>
-                  Página {pagina} de {totalPaginas}
-                </span>
-                <button
-                  onClick={handleProxima}
-                  disabled={pagina === totalPaginas || carregando}
-                  className={styles.paginacaoBtn}
-                >
-                  Próxima
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
+          </>
+        ) : (
+          <div className={styles.semResultados}>
+            Nenhum resultado encontrado
+          </div>
+        )}
+      </div>
     </div>
   );
 };
-
-export default RelatorioPontos;

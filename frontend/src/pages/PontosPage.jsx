@@ -1,4 +1,4 @@
-import RelatorioPontos from "../components/Pontos/PontosMain/Pontos";
+import {RelatorioPontos} from "../components/Pontos/PontosMain/Pontos";
 
 
 export const PontosPage = () => {
