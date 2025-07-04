@@ -1,14 +1,30 @@
 import { apiKairos } from "../utils/apiKairos";
 
+
+
 export const buscarFuncionariosKairos = async () => {
+  const nomesMatriculas = [];
+
 
   const body = {
     Matriculas: []
   };
 
+
   try {
     const response = await apiKairos.post("People/SearchPeople", body);
-    return response.data.Obj;
+
+    
+    for (const pessoa of response.data.Obj) {
+      const { Matricula, Nome } = pessoa;
+      nomesMatriculas.push({ Matricula, Nome });
+    }
+
+
+    nomesMatriculas.sort((a, b) => a.Nome.localeCompare(b.Nome));
+
+    return nomesMatriculas;
+
   } catch (error) {
     console.error("Erro ao buscar funcionários:", error);
     throw error;

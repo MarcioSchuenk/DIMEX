@@ -1,143 +1,61 @@
+import { buscarFuncionariosKairos, buscarPontosKairos } from "../services/kairos.services";
 import { Request, Response } from "express";
-import {
-  buscarFuncionariosKairos,
-  buscarPontosKairos,
-} from "../services/kairos.services";
-import { Funcionario } from "../interface/kairos.interface";
+// req: Request, res: Response
+export const gerarRelatorioPontos = async () => {
+  // const {dataInicio, dataFim} = req.query;
 
-/**
- * Ajusta a data do ponto para pertencer à jornada correta.
- * Se a hora for menor que 4, considera como parte do dia anterior.
- */
-function ajustarDataJornada(ponto: {
-  Dia: number;
-  Mes: number;
-  Ano: number;
-  Hora: number;
-}): string {
-  const { Dia, Mes, Ano, Hora } = ponto;
-  const dataOriginal = new Date(Ano, Mes - 1, Dia, Hora);
+  // if (!dataInicio || !dataFim) {
+  //    return res.status(400).json({ error: "Parâmetros 'dataInicio' e 'dataFim' são obrigatórios." });
+  //  }
 
-  if (Hora < 4) {
-    dataOriginal.setDate(dataOriginal.getDate() - 1);
-  }
+  const filtrarAtrasos = true;
 
-  return dataOriginal.toLocaleDateString("pt-BR"); // Formato DD/MM/YYYY
-}
-
-export const gerarRelatorioPontos = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
   try {
-    const { inicio, fim, page = "1", limit = "10", nome = "" } = req.query;
-
-    if (!inicio || !fim) {
-      res
-        .status(400)
-        .json({ error: "Parâmetros 'inicio' e 'fim' são obrigatórios." });
-      return;
-    }
-
     const funcionarios = await buscarFuncionariosKairos();
 
-    const dadosFiltrados = funcionarios
-      .map(({ Nome, Matricula }: Funcionario) => ({
-        nome: Nome,
-        matricula: Matricula,
-      }))
-      .filter((func: { nome: string }) =>
-        func.nome.toLowerCase().includes((nome as string).toLowerCase())
-      );
+    const matriculas = funcionarios.map((funcionario) => funcionario.Matricula);
 
-    const pageNumber = parseInt(page as string, 10);
-    const limitNumber = parseInt(limit as string, 10);
-    const startIndex = (pageNumber - 1) * limitNumber;
-    const endIndex = startIndex + limitNumber;
 
-    const funcionariosPaginados = dadosFiltrados.slice(startIndex, endIndex);
-    const matriculasPaginadas = funcionariosPaginados.map(
-      (f: { matricula: any }) => f.matricula
-    );
+    const pontos = await buscarPontosKairos("30/06/2025" as string, "30/06/2025" as string, matriculas);
 
-    const pontos = await buscarPontosKairos(
-      String(inicio),
-      String(fim),
-      matriculasPaginadas
-    );
+    const pontosPorMatricula = new Map<number, any[]>();
 
-    const agrupado = funcionariosPaginados.map(
-      (func: { matricula: any; nome: any }) => {
-        const pontosFuncionario = pontos.filter(
-          (p: { Matricula: any }) => p.Matricula === func.matricula
-        );
-
-        const pontosPorDia: Record<
-          string,
-          { hora: number; minuto: number; dataCompleta: Date }[]
-        > = {};
-
-        pontosFuncionario.forEach((ponto: { Hora: any; Minuto?: any; Ano: any; Mes: any; Dia: any; }) => {
-          const hora = ponto.Hora;
-          const minuto = ponto.Minuto;
-          const dataCompleta = new Date(
-            ponto.Ano,
-            ponto.Mes - 1,
-            ponto.Dia,
-            hora,
-            minuto
-          );
-
-          const dataCorrigida = ajustarDataJornada(ponto);
-
-          if (!pontosPorDia[dataCorrigida]) {
-            pontosPorDia[dataCorrigida] = [];
-          }
-
-          pontosPorDia[dataCorrigida].push({
-            hora,
-            minuto,
-            dataCompleta,
-          });
-        });
-
-        const pontosAgrupados = Object.entries(pontosPorDia).map(
-          ([data, marcacoes]) => {
-            const ordenadas = marcacoes
-              .sort(
-                (a, b) => a.dataCompleta.getTime() - b.dataCompleta.getTime()
-              )
-              .slice(0, 4);
-
-            return {
-              data,
-              marcacoes: ordenadas.map(({ hora, minuto }) => ({
-                Hora: hora,
-                Minuto: minuto,
-              })),
-            };
-          }
-        );
-
-        return {
-          nome: func.nome,
-          matricula: func.matricula,
-          pontos: pontosAgrupados,
-        };
+    for (const ponto of pontos) {
+      const matricula = Number(ponto.Matricula);
+      if (!pontosPorMatricula.has(matricula)) {
+        pontosPorMatricula.set(matricula, []);
       }
-    );
+      pontosPorMatricula.get(matricula)!.push(ponto);
+    }
 
-    res.json({
-      page: pageNumber,
-      limit: limitNumber,
-      totalFuncionarios: dadosFiltrados.length,
-      totalPaginas: Math.ceil(dadosFiltrados.length / limitNumber),
-      dados: agrupado,
-    });
+    const resultado = [];
+    
+    for (const func of funcionarios) {
+      const matricula = Number(func.Matricula);
+      const pontosFuncionario = pontosPorMatricula.get(matricula) || [];
+
+      if (pontosFuncionario.length === 0) continue;
+
+      if (filtrarAtrasos) {
+        const primeiroPonto = pontosFuncionario[0];
+        if (!primeiroPonto) continue;
+
+        const minuto = primeiroPonto.Minuto;
+        const atrasado = minuto > 6 && minuto < 54;
+
+        if (!atrasado) continue;
+      }
+
+      resultado.push({
+        nome: func.Nome,
+        matricula: func.Matricula,
+        pontos: pontosFuncionario,
+      });
+    }
+
+    console.log(JSON.stringify(resultado, null, 2));
   } catch (error) {
-    console.error("Erro ao gerar relatório:", error);
-    res
-      .status(500)
-      .json({ error: "Erro interno ao gerar relatório de pontos." });
+    console.error("Erro ao buscar pontos:", error);
+    // return res.status(500).json({ error: "Erro ao buscar pontos." });
   }
-};
+}

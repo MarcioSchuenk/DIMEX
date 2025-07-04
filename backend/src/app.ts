@@ -8,6 +8,7 @@ import { salaNobreRoutes } from "./router/salanobre.route";
 import { userRoutes } from "./router/user.route";
 import { HandleErrors } from "./error/handleErrors.middleware";
 import { apiKairos } from "./router/kairos.routes";
+import { gerarRelatorioPontos } from "./controllers/karios.controllers";
 
 export const app = express();
 
@@ -17,10 +18,11 @@ app.use(cors());
 
 app.use(json());
 
+gerarRelatorioPontos();
 
-app.use("/sobras", sobrasRoutes);
-app.use("/caixas", salaNobreRoutes);
-app.use("/users", userRoutes);
-app.use("/pontos", apiKairos);
+// app.use("/sobras", sobrasRoutes);
+// app.use("/caixas", salaNobreRoutes);
+// app.use("/users", userRoutes);
+// app.use("/pontos", apiKairos);
 
 app.use(HandleErrors.execute);
