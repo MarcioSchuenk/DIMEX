@@ -55,26 +55,26 @@ export const gerarRelatorioPontos = async (req: Request, res: Response): Promise
 
       const pontosFormatados: any[] = [];
 
-      for (const data in pontosAgrupados) {
-        const pontosDoDia = pontosAgrupados[data];
-        if (pontosDoDia.length === 0) continue;
+    for (const data in pontosAgrupados) {
+      const pontosDoDia = pontosAgrupados[data];
+      if (pontosDoDia.length === 0) continue;
 
-        const primeiroPonto = pontosDoDia[0];
-        const atraso = primeiroPonto.Minuto > 6 && primeiroPonto.Minuto < 54;
+      const primeiroPonto = pontosDoDia[0];
+      const atraso = primeiroPonto.Minuto > 6 && primeiroPonto.Minuto < 54;
 
-        if (isFiltrarAtrasos) {
-          if (atraso) {
-            // Marca o atraso no primeiro ponto e inclui todos os pontos do dia
-            primeiroPonto.atraso = true;
-            pontosFormatados.push(...pontosDoDia);
-          }
-          // Se não houve atraso e estamos filtrando atrasos, ignora esse dia
-        } else {
-          // Mesmo que não tenha atraso, retorna todos os pontos
-          primeiroPonto.atraso = atraso; // marca se teve atraso, só informativo
+      if (isFiltrarAtrasos) {
+        if (atraso) {
+          // Marca o atraso no primeiro ponto e inclui todos os pontos do dia
+          primeiroPonto.atraso = true;
           pontosFormatados.push(...pontosDoDia);
         }
+        // Se não houve atraso e estamos filtrando atrasos, ignora esse dia
+      } else {
+        // Mesmo que não tenha atraso, retorna todos os pontos
+        primeiroPonto.atraso = atraso; // marca se teve atraso, só informativo
+        pontosFormatados.push(...pontosDoDia);
       }
+    }
 
 
       if (pontosFormatados.length === 0) return null;

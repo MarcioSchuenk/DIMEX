@@ -49,7 +49,11 @@ export const RelatorioPontos = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    buscarDados(1);
+    setTimeout(() => {
+      buscarDados(1);
+    })
+
+
   };
 
   const handlePaginaChange = (novaPagina) => {
@@ -101,7 +105,13 @@ export const RelatorioPontos = () => {
             </label>
           </div>
 
-          <button type="submit" className={styles.buscarBtn}>Buscar</button>
+          <button 
+            type="submit" 
+            className={styles.buscarBtn} 
+            disabled={carregando}>
+              
+            {carregando ? "Buscando..." : "Buscar"}
+        </button>
         </form>
       </header>
 
