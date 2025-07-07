@@ -1,25 +1,19 @@
 import { apiKairos } from "../utils/apiKairos";
 
-
-
 export const buscarFuncionariosKairos = async () => {
   const nomesMatriculas = [];
-
 
   const body = {
     Matriculas: []
   };
 
-
   try {
     const response = await apiKairos.post("People/SearchPeople", body);
-
     
     for (const pessoa of response.data.Obj) {
       const { Matricula, Nome } = pessoa;
       nomesMatriculas.push({ Matricula, Nome });
     }
-
 
     nomesMatriculas.sort((a, b) => a.Nome.localeCompare(b.Nome));
 
@@ -42,7 +36,7 @@ export const buscarPontosKairos = async (dataInicio: string, dataFim: string, ma
 
   try {
     const response = await apiKairos.post("/Mark/GetMarks", body);
-    return response.data.Obj;
+    return Array.isArray(response.data.Obj) ? response.data.Obj : [];
 
   } catch (error) {
 

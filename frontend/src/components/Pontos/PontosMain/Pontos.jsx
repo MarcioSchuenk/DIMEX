@@ -9,37 +9,53 @@ export const RelatorioPontos = () => {
   const [dataFim, setDataFim] = useState("");
   const [nome, setNome] = useState("");
   const [filtrarAtrasos, setFiltrarAtrasos] = useState(false);
+  const [pagina, setPagina] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+  const [carregando, setCarregando] = useState(false);
 
   const dataFormatada = (data) => {
     const dataFormat = data.split("-").reverse().join("/");
     return dataFormat;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const buscarDados = async () => {
-      try {
-        const params = {
-          dataInicio,
-          dataFim,
-          nome: nome || "",
-        };
-        if (filtrarAtrasos) {
-          params.filtrarAtrasos = true;
-        }
-
-        const res = await api.get("https://2092-200-225-228-145.ngrok-free.app/pontos", {
-          params,
-        });
-
-        setDados(res.data);
-        console.log(res.data);
-      } catch (err) {
-        console.error("Erro ao buscar dados:", err);
+  const buscarDados = async (paginaAtual = 1) => {
+    setCarregando(true);
+    try {
+      const params = {
+        dataInicio: dataFormatada(dataInicio),
+        dataFim: dataFormatada(dataFim),
+        nome: nome || "",
+        pagina: paginaAtual,
+        limite: 15,
+      };
+      if (filtrarAtrasos) {
+        params.filtrarAtrasos = true;
       }
-    };
-    buscarDados();
+
+      const res = await api.get("https://2092-200-225-228-145.ngrok-free.app/pontos", {
+        params,
+      });
+
+      setDados(res.data.dados);
+      setTotalPaginas(res.data.totalPaginas);
+      setPagina(res.data.pagina);
+    } catch (err) {
+      console.error("Erro ao buscar dados:", err);
+      setDados([]);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    buscarDados(1);
+  };
+
+  const handlePaginaChange = (novaPagina) => {
+    if (novaPagina >= 1 && novaPagina <= totalPaginas) {
+      buscarDados(novaPagina);
+    }
   };
 
   return (
@@ -51,18 +67,16 @@ export const RelatorioPontos = () => {
           <div className={styles.filtroGroup}>
             <label className={styles.label}>Data Início</label>
             <DataSelector 
-              className={styles.input}
               dataSelecionada={dataInicio}
-              onChange={(dataInicio) => setDataInicio(dataFormatada(dataInicio))}
+              onChange={(dataInicio) => setDataInicio(dataInicio)}
             />
           </div>
 
           <div className={styles.filtroGroup}>
             <label className={styles.label}>Data Fim</label>
             <DataSelector 
-              className={styles.input}
               dataSelecionada={dataFim}
-              onChange={(dataFim) => setDataFim(dataFormatada(dataFim))}
+              onChange={(dataFim) => setDataFim(dataFim)}
             />
           </div>
 
@@ -92,7 +106,9 @@ export const RelatorioPontos = () => {
       </header>
 
       <div className={styles.resultadosContainer}>
-        {dados.length > 0 ? (
+        {carregando ? (
+          <div className={styles.carregando}>🔄 Buscando dados...</div>
+        ) : dados.length > 0 ? (
           <>
             <div className={styles.tableContainer}>
               <table className={styles.table}>
@@ -107,39 +123,72 @@ export const RelatorioPontos = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {dados.map((pessoa, index) => {
-                    const pontosFormatados = Array.from({ length: 4 }).map((_, i) => {
-                      const ponto = pessoa.pontos[i];
-                      if (!ponto) return "--:--";
+                  {dados.map((pessoa, indexPessoa) => {
+                    // Agrupar os pontos por data
+                    const pontosPorData = pessoa.pontos.reduce((acc, ponto) => {
+                      const data = ponto.dataJornada;
+                      if (!acc[data]) acc[data] = [];
+                      acc[data].push(ponto);
+                      return acc;
+                    }, {});
 
-                      const hora = String(ponto.Hora).padStart(2, "0");
-                      const minuto = String(ponto.Minuto).padStart(2, "0");
-                      return `${hora}:${minuto}`;
+                    return Object.entries(pontosPorData).map(([data, pontosDoDia], indexData) => {
+                      const pontosFormatados = Array.from({ length: 4 }).map((_, i) => {
+                        const ponto = pontosDoDia[i];
+                        if (!ponto) return "--:--";
+
+                        const hora = String(ponto.Hora).padStart(2, "0");
+                        const minuto = String(ponto.Minuto).padStart(2, "0");
+                        const horario = `${hora}:${minuto}`;
+
+                        if (ponto.atraso === true) {
+                          return (
+                            <span key={i} style={{ color: "red", fontWeight: "bold" }}>
+                              {horario} ⚠️
+                            </span>
+                          );
+                        }
+
+                        return horario;
+                      });
+
+                      return (
+                        <tr key={`${indexPessoa}-${indexData}`}>
+                          <td>{pessoa.nome}</td>
+                          <td>{data}</td>
+                          <td>{pontosFormatados[0]}</td>
+                          <td>{pontosFormatados[1]}</td>
+                          <td>{pontosFormatados[2]}</td>
+                          <td>{pontosFormatados[3]}</td>
+                        </tr>
+                      );
                     });
-
-                    const pontoExemplo = pessoa.pontos[0];
-                    const data = pontoExemplo
-                      ? `${String(pontoExemplo.Dia).padStart(2, "0")}/${String(pontoExemplo.Mes).padStart(2, "0")}/${pontoExemplo.Ano}`
-                      : "--/--/----";
-
-                    return (
-                      <tr key={index}>
-                        <td>{pessoa.nome}</td>
-                        <td>{data}</td>
-                        <td>{pontosFormatados[0]}</td>
-                        <td>{pontosFormatados[1]}</td>
-                        <td>{pontosFormatados[2]}</td>
-                        <td>{pontosFormatados[3]}</td>
-                      </tr>
-                    );
                   })}
                 </tbody>
               </table>
             </div>
+
+            <div className={styles.paginacao}>
+              <button
+                onClick={() => handlePaginaChange(pagina - 1)}
+                disabled={pagina === 1}
+              >
+                Anterior
+              </button>
+              <span>
+                Página {pagina} de {totalPaginas}
+              </span>
+              <button
+                onClick={() => handlePaginaChange(pagina + 1)}
+                disabled={pagina === totalPaginas}
+              >
+                Próxima
+              </button>
+            </div>
           </>
         ) : (
           <div className={styles.semResultados}>
-            Nenhum resultado encontrado
+            <span style={{ color: "red", fontWeight: "bold" }}>⚠️ Nenhum resultado encontrado</span>
           </div>
         )}
       </div>
