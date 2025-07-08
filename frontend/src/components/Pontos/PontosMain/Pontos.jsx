@@ -32,7 +32,7 @@ export const RelatorioPontos = () => {
         params.filtrarAtrasos = true;
       }
 
-      const res = await api.get("https://2092-200-225-228-145.ngrok-free.app/pontos", {
+      const res = await api.get("http://192.168.10.10:80/pontos", {
         params,
       });
 
