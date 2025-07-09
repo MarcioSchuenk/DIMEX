@@ -6,7 +6,6 @@ services:
       context: ./backend
     image: pedroloreti/dimex-backend:latest
     restart: always
-
     environment:
       - DATABASE_URL=postgresql://postgres:admin@db:5432/postgres?schema=public
     depends_on:

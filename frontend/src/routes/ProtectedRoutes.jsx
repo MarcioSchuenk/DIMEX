@@ -1,4 +1,4 @@
-import { useAuth } from "../context/AuthContext"; // sem importar AuthContext diretamente
+import { useAuth } from "../context/AuthContext";
 import { Navigate, Outlet } from "react-router-dom";
 
 export const ProtectedRoutes = () => {

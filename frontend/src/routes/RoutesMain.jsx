@@ -5,7 +5,7 @@ import { ProtectedRoutes } from "./ProtectedRoutes";
 import { SalaNobrePage } from "../pages/SalaNobrePage";
 // import { SobrasPage } from "../pages/SobrasPage";
 import { PontosPage } from "../pages/PontosPage";
-import { ColaboradoresPage } from "../pages/ColaboradoresPage";
+// import { ColaboradoresPage } from "../pages/ColaboradoresPage";
 
 export const RoutesMain = () => {
   return (
@@ -16,7 +16,7 @@ export const RoutesMain = () => {
           <Route path="/fluxo_nobre" element={<SalaNobrePage />} />
           {/* <Route path="/sobras" element={<SobrasPage />} /> */}
           <Route path="ponto" element={<PontosPage />} />
-          <Route path="jirau" element={<ColaboradoresPage />} />
+          {/* <Route path="jirau" element={<ColaboradoresPage />} /> */}
         </Route>
       </Route>
     </Routes>
