@@ -1,1 +1,21 @@
 @import './reset.scss';
+
+.container-maintenance {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.maintenance {
+    height: 500px;
+}
+
+.p-maintenance {
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #fff2f2;
+}

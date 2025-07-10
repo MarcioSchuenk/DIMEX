@@ -6,6 +6,7 @@ import { SalaNobrePage } from "../pages/SalaNobrePage";
 // import { SobrasPage } from "../pages/SobrasPage";
 import { PontosPage } from "../pages/PontosPage";
 // import { ColaboradoresPage } from "../pages/ColaboradoresPage";
+import { MaintenancePage } from "../pages/MaintenancePage";
 
 export const RoutesMain = () => {
   return (
@@ -16,6 +17,7 @@ export const RoutesMain = () => {
           <Route path="/fluxo_nobre" element={<SalaNobrePage />} />
           {/* <Route path="/sobras" element={<SobrasPage />} /> */}
           <Route path="ponto" element={<PontosPage />} />
+          <Route path="maintenance" element={<MaintenancePage />} />
           {/* <Route path="jirau" element={<ColaboradoresPage />} /> */}
         </Route>
       </Route>

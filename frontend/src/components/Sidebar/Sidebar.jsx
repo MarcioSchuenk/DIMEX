@@ -4,6 +4,7 @@ import "boxicons/css/boxicons.min.css";
 import profile from "../../assets/profile.png";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export const Sidebar = () => {
   const [isActive, setIsActive] = useState(false);
@@ -17,6 +18,7 @@ export const Sidebar = () => {
     setOpenCard(openCard === cardName ? null : cardName);
   };
 
+  const navigate = useNavigate();
   return (
     <>
       {/* BACKDROP (opcional para mobile) */}
@@ -61,9 +63,17 @@ export const Sidebar = () => {
               <li className={styles.subItem}>
                 <Link to="https://dashboard-meid.vercel.app/" target="_blank">
                   <i className="bx bx-right-arrow"></i>
-                  <span className={styles.links_name}>Resgistro Rua</span>
+                  <span className={styles.links_name}>Resgistro de Pedidos</span>
                 </Link>
               </li>
+
+              <li className={styles.subItem}>
+                <Link to="https://carregamento-expedicao.vercel.app/" target="_blank">
+                  <i className="bx bx-right-arrow"></i>
+                  <span className={styles.links_name}>Carregamento</span>
+                </Link>
+              </li>
+
 
               {/* <li className={styles.subItem}>
                 <Link to="/jirau">
@@ -82,23 +92,23 @@ export const Sidebar = () => {
           )}
 
           {/* Rodoviário */}
-          <li onClick={() => toggleCard("rodoviario")}>
+          <li onClick={() => toggleCard("sac")}>
             <a onClick={!isActive ? toggleSidebar : undefined}>
               <i className="bx bx-map"></i>
-              <span className={styles.links_name}>Rodoviário</span>
+              <span className={styles.links_name}>SAC</span>
               <span className={styles.arrow_toggle}>
                 <i
                   className={`bx ${
-                    openCard === "rodoviario"
+                    openCard === "sac"
                       ? "bx-chevron-up"
                       : "bx-chevron-down"
                   }`}
                 ></i>
               </span>
             </a>
-            <span className={styles.tooltip}>Rodoviário</span>
+            <span className={styles.tooltip}>SAC</span>
           </li>
-          {isActive && openCard === "rodoviario" && (
+          {isActive && openCard === "sac" && (
             <li>
               <Link to="https://app.pipefy.com/pipes/306350886" target="_blank">
                 <i className="bx bx-right-arrow"></i>
@@ -108,7 +118,12 @@ export const Sidebar = () => {
           )}
 
           {/* Oficina */}
-          <li onClick={() => toggleCard("oficina")}>
+          <li
+            onClick={() => {
+              toggleCard("oficina");
+              navigate("/maintenance"); // redireciona para a página desejada
+            }}
+          >
             <a onClick={!isActive ? toggleSidebar : undefined}>
               <i className="bx bx-buildings"></i>
               <span className={styles.links_name}>Oficina</span>
@@ -121,6 +136,26 @@ export const Sidebar = () => {
               </span>
             </a>
             <span className={styles.tooltip}>Oficina</span>
+          </li>
+
+          <li
+            onClick={() => {
+              toggleCard("monitoramento");
+              navigate("/maintenance"); // redireciona para a página desejada
+            }}
+          >
+            <a onClick={!isActive ? toggleSidebar : undefined}>
+              <i className="bx bx-car"></i>
+              <span className={styles.links_name}>Monitoramento</span>
+              <span className={styles.arrow_toggle}>
+                <i
+                  className={`bx ${
+                    openCard === "monitoramento" ? "bx-chevron-up" : "bx-chevron-down"
+                  }`}
+                ></i>
+              </span>
+            </a>
+            <span className={styles.tooltip}>Monitoramento</span>
           </li>
 
           <li onClick={() => toggleCard("DP")}>
