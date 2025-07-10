@@ -1,12 +1,12 @@
 // screens/HomeScreen.tsx
 import React from "react";
-import { View, Text, StyleSheet, StatusBar, Linking } from "react-native";
+import { View, Text, StyleSheet, StatusBar, Linking, ScrollView } from "react-native";
 import { useAuth } from "../../providers/AuthContext";
 import { CardButton } from "../components/CardButton";
 import { FloatingActionButton } from "../components/FloatingActionButton";
 
 export const HomeScreen = ({ navigation }) => {
-  const { user, logout } = useAuth();
+  // const { user, logout } = useAuth();
 
   const handleOpenAnalytics = () => {
     Linking.openURL("https://dimex-nu.vercel.app");
@@ -19,15 +19,14 @@ export const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
 
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Controle de Operações Logísticas</Text>
-      </View>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerTitle}>Controle de Operações Logísticas</Text>
+        </View>
 
-      <View style={styles.cardsContainer}>
-        {/* Cards administrativos - apenas para ADMIN */}
-        {user?.role === "ADMIN" && (
+        <View style={styles.cardsContainer}>
           <>
             <CardButton
               icon="local-shipping"
@@ -57,35 +56,31 @@ export const HomeScreen = ({ navigation }) => {
               onPress={() => navigation.navigate("RegistroAtendimento")}
             />
           </>
-        )}
-
-        {/* Card para NOBRE e USER */}
-        {(user?.role === "NOBRE" || user?.role === "ADMIN") && (
+    
           <CardButton
             icon="swap-vert"
             title="Fluxo da sala nobre"
             subtitle="Registrar código da caixa"
             onPress={() => navigation.navigate("FluxoSalaNobre")}
           />
-        )}
-      </View>
+          <View style={styles.container_buttons}>
+            <FloatingActionButton
+              icon="analytics"
+              label="WEB PAGE ANALYTICS"
+              onPress={handleOpenAnalytics}
+              position="left"
+            />
 
-      {user?.role === "ADMIN" && (
-        <FloatingActionButton
-          icon="analytics"
-          label="WEB PAGE ANALYTICS"
-          onPress={handleOpenAnalytics}
-          position="left"
-        />
-      )}
-
-      <FloatingActionButton
-        icon="logout"
-        label="SAIR"
-        onPress={handleLogout}
-        position="right"
-        color="#E53935"
-      />
+            <FloatingActionButton
+              icon="logout"
+              label="SAIR"
+              onPress={handleLogout}
+              position="right"
+              color="#E53935"
+            />
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -110,6 +105,13 @@ const styles = StyleSheet.create({
   cardsContainer: {
     width: "100%",
     flex: 1,
-    marginBottom: 70,
+    marginBottom: 4,
+  },
+  container_buttons: {
+    width: "100%",
+    marginTop: 150,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });

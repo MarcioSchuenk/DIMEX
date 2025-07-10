@@ -7,10 +7,10 @@ import { StatsCard } from "../StatsCards/StatsCard";
 import { PacotesBarChart } from "../PacotesBarChart/PacotesBarChart";
 import styles from "./styles.module.scss";
 
-// const API_URL = import.meta.env.VITE_API_URL;
-// const socket = io(API_URL, {
-//   transports: ["websocket"],
-// });
+const API_URL = import.meta.env.VITE_API_URL;
+const socket = io(API_URL, {
+  transports: ["websocket"],
+});
 
 export const SalaNobre = () => {
   const [dataSelecionada, setDataSelecionada] = useState("");
@@ -24,8 +24,6 @@ export const SalaNobre = () => {
   });
   const [forcarAtualizacao, setForcarAtualizacao] = useState(false);
 
-  console.log(dataSelecionada)
-
   useEffect(() => {
     const buscarDados = async () => {
       try {
@@ -38,13 +36,13 @@ export const SalaNobre = () => {
     buscarDados();
   }, []);
 
-  // useEffect(() => {
-  //   socket.on("novaCaixa", (novaCaixa) => {
-  //     setDadosBrutos((prev) => [...prev, novaCaixa]);
-  //     setForcarAtualizacao((prev) => !prev);
-  //   });
-  //   return () => socket.off("novaCaixa");
-  // }, []);
+  useEffect(() => {
+    socket.on("novaCaixa", (novaCaixa) => {
+      setDadosBrutos((prev) => [...prev, novaCaixa]);
+      setForcarAtualizacao((prev) => !prev);
+    });
+    return () => socket.off("novaCaixa");
+  }, []);
 
   useEffect(() => {
     const horas = gerarHoras();

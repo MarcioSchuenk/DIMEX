@@ -8,7 +8,7 @@ import SobrasCarregamentoScreen from "./src/Screens/SobrasCarregamentoScreen";
 import SobrasSalaNobreScreen from "./src/Screens/SobrasSalaNobreScreen";
 import { FormularioPedidosScreen } from "./src/Screens/FormularioPedidosScreen";
 import { FluxoSalaNobreScreen } from "./src/Screens/FluxoSalaNobreScreen";
-import { LoginScreen } from "./src/Screens/LoginScreen";
+// import { LoginScreen } from "./src/Screens/LoginScreen";
 import { FormularioApp } from "./src/Screens/RegistroAtendimentoScreen";
 import { AuthProvider } from "./providers/AuthContext";
 
@@ -17,15 +17,14 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
+      {/* <AuthProvider> */}
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Login"
             screenOptions={{
               headerShown: false,
             }}
           >
-            <Stack.Screen name="Login" component={LoginScreen} />
+            {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen
               name="SobrasCarregamento"
@@ -54,7 +53,7 @@ export default function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      </AuthProvider>
+      {/* </AuthProvider> */}
     </SafeAreaProvider>
   );
 }

@@ -5,7 +5,6 @@ export const Colaboradores = () => {
     const getColaboradores = async () => {
       try {
         const response = await api.get("/colaboradores");
-        console.log(response.data);
       } catch (err) {
         console.error("Erro ao buscar colaboradores:", err);
       }

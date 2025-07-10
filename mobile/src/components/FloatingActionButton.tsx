@@ -36,20 +36,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 63,
     paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingHorizontal: 1,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
+
     elevation: 3,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
   },
   leftButton: {
-    left: 24,
+    left: 1,
   },
   rightButton: {
-    right: 24,
+    right: 1,
   },
   buttonText: {
     color: '#FFFFFF',
