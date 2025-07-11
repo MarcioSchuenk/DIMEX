@@ -11,13 +11,14 @@ import { FluxoSalaNobreScreen } from "./src/Screens/FluxoSalaNobreScreen";
 // import { LoginScreen } from "./src/Screens/LoginScreen";
 import { FormularioApp } from "./src/Screens/RegistroAtendimentoScreen";
 import { AuthProvider } from "./providers/AuthContext";
+import { FinalizaçãoCarrinhos } from "./src/Screens/FinalizaçãoCarrinhos";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      {/* <AuthProvider> */}
+      <AuthProvider>
         <NavigationContainer>
           <Stack.Navigator
             screenOptions={{
@@ -46,6 +47,13 @@ export default function App() {
               component={FormularioPedidosScreen}
               options={{ title: "Separação de Carrinhos", headerShown: true }}
             />
+
+            <Stack.Screen
+              name="FinalizacaoCarrinhos"
+              component={FinalizaçãoCarrinhos}
+              options={{ title: "Finalização de carrinhos", headerShown: true }}
+            />
+
             <Stack.Screen
               name="RegistroAtendimento"
               component={FormularioApp}
@@ -53,7 +61,7 @@ export default function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      {/* </AuthProvider> */}
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }

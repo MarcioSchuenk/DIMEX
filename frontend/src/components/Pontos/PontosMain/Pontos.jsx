@@ -101,7 +101,7 @@ export const RelatorioPontos = () => {
                 id="atrasos" 
                 onChange={(e) => setFiltrarAtrasos(e.target.checked)}
               />
-              Filtrar pelos atrasos
+              Filtrar por irregularidades
             </label>
           </div>
 

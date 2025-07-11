@@ -28,25 +28,32 @@ export const HomeScreen = ({ navigation }) => {
 
         <View style={styles.cardsContainer}>
           <>
-            <CardButton
+            {/* <CardButton
               icon="local-shipping"
               title="Sobras de Carregamento"
               subtitle="Registrar no app"
               onPress={() => navigation.navigate("SobrasCarregamento")}
-            />
+            /> */}
 
-            <CardButton
+            {/* <CardButton
               icon="meeting-room"
               title="Sobras da Sala Nobre"
               subtitle="Registrar no app"
               onPress={() => navigation.navigate("SobrasSalaNobre")}
-            />
+            /> */}
 
             <CardButton
               icon="shopping-cart"
               title="Retirada de Carrinhos"
-              subtitle="Registrar retirada de carrinhos"
+              subtitle="Registrar a retirada de carrinhos"
               onPress={() => navigation.navigate("SeparacaoCarrinhos")}
+            />
+
+            <CardButton
+              icon="shopping-cart"
+              title="Finalização de Carrinhos"
+              subtitle="Registrar a entrega de carrinhos"
+              onPress={() => navigation.navigate("FinalizacaoCarrinhos")}
             />
 
             <CardButton
@@ -109,7 +116,7 @@ const styles = StyleSheet.create({
   },
   container_buttons: {
     width: "100%",
-    marginTop: 150,
+    marginTop: 350,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

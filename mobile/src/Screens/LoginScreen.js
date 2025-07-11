@@ -47,28 +47,28 @@
 //       };
 
 //       // Seta token padrão no axios para futuras requisições
-//       api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+//        api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-//       // Atualiza contexto
-//       setUser(userData);
+//        // Atualiza contexto
+//        setUser(userData);
 
-//       // Persiste localmente
-//       await AsyncStorage.setItem("@auth", JSON.stringify(userData));
+//        // Persiste localmente
+//        await AsyncStorage.setItem("@auth", JSON.stringify(userData));
 
-//       // Redireciona para a tela Home
-//       navigation.replace("Home");
-//     } catch (error) {
-//       console.error("Erro ao fazer login:", error);
-//       Alert.alert(
-//         "Erro",
-//         error.response?.data?.message || "Erro ao fazer login"
-//       );
-//     }
-//   };
+//        // Redireciona para a tela Home
+//        navigation.replace("Home");
+//      } catch (error) {
+//        console.error("Erro ao fazer login:", error);
+//        Alert.alert(
+//          "Erro",
+//          error.response?.data?.message || "Erro ao fazer login"
+//        );
+//      }
+//    };
 
-//   const dismissKeyboard = () => {
-//     Keyboard.dismiss();
-//   };
+//    const dismissKeyboard = () => {
+//      Keyboard.dismiss();
+//    };
 
   
 //   return (

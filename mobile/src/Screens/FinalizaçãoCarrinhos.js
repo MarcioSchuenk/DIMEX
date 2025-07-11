@@ -7,7 +7,7 @@ import { AuthButton } from "../components/AuthButton";
 
 
 
-export const FormularioPedidosScreen = () => {
+export const FinalizaçãoCarrinhos = () => {
   const [codigoSeparador, setCodigoSeparador] = useState("");
   const [codigoSeparadorError, setCodigoSeparadorError] = useState(false);
   const [pedidos, setPedidos] = useState([
@@ -128,7 +128,7 @@ export const FormularioPedidosScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Retirada de Carrinhos</Text>
+      <Text style={styles.header}>Finalização de Carrinhos</Text>
 
       <Card>
         {/* Código do Separador */}
