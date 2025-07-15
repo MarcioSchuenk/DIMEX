@@ -32,7 +32,7 @@ export const RelatorioPontos = () => {
         params.filtrarAtrasos = true;
       }
 
-      const res = await api.get("https://2c80ba0d68a4.ngrok-free.app/pontos", {
+      const res = await api.get("https://a5045ec4cce4.ngrok-free.app/pontos", {
         params,
       });
 
@@ -52,7 +52,6 @@ export const RelatorioPontos = () => {
     setTimeout(() => {
       buscarDados(1);
     })
-
 
   };
 
