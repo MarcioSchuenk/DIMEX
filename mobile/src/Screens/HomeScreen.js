@@ -1,12 +1,22 @@
 // screens/HomeScreen.tsx
 import React from "react";
-import { View, Text, StyleSheet, StatusBar, Linking, ScrollView } from "react-native";
-import { useAuth } from "../../providers/AuthContext";
+import {
+  View,
+  Text,
+  StyleSheet,
+  StatusBar,
+  Linking,
+  ScrollView,
+} from "react-native";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { CardButton } from "../components/CardButton";
 import { FloatingActionButton } from "../components/FloatingActionButton";
 
 export const HomeScreen = ({ navigation }) => {
-  // const { user, logout } = useAuth();
+  const { logout } = useContext(AuthContext);  
+
+  // const user = auth?.user;
 
   const handleOpenAnalytics = () => {
     Linking.openURL("https://dimex-nu.vercel.app");
@@ -14,7 +24,6 @@ export const HomeScreen = ({ navigation }) => {
 
   const handleLogout = () => {
     logout();
-    navigation.replace("Login");
   };
 
   return (
@@ -23,7 +32,9 @@ export const HomeScreen = ({ navigation }) => {
         <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
 
         <View style={styles.headerContainer}>
-          <Text style={styles.headerTitle}>Controle de Operações Logísticas</Text>
+          <Text style={styles.headerTitle}>
+            Controle de Operações Logísticas
+          </Text>
         </View>
 
         <View style={styles.cardsContainer}>
@@ -63,7 +74,7 @@ export const HomeScreen = ({ navigation }) => {
               onPress={() => navigation.navigate("RegistroAtendimento")}
             />
           </>
-    
+
           <CardButton
             icon="swap-vert"
             title="Fluxo da sala nobre"
