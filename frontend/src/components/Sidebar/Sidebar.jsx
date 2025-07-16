@@ -54,6 +54,13 @@ export const Sidebar = () => {
           {isActive && openCard === "expedicao" && (
             <>
               <li className={styles.subItem}>
+                <Link to="/seperacao_jirau">
+                  <i className="bx bx-right-arrow"></i>
+                  <span className={styles.links_name}>Separação Jirau</span>
+                </Link>
+              </li>
+              
+              <li className={styles.subItem}>
                 <Link to="/fluxo_nobre">
                   <i className="bx bx-right-arrow"></i>
                   <span className={styles.links_name}>Fluxo Sala Nobre</span>
@@ -63,17 +70,28 @@ export const Sidebar = () => {
               <li className={styles.subItem}>
                 <Link to="https://dashboard-meid.vercel.app/" target="_blank">
                   <i className="bx bx-right-arrow"></i>
-                  <span className={styles.links_name}>Resgistro de Pedidos</span>
+                  <span className={styles.links_name}>
+                    Resgistro de Pedidos
+                  </span>
                 </Link>
               </li>
 
               <li className={styles.subItem}>
-                <Link to="https://carregamento-expedicao.vercel.app/" target="_blank">
+                <Link
+                  to="https://carregamento-expedicao.vercel.app/"
+                  target="_blank"
+                >
                   <i className="bx bx-right-arrow"></i>
                   <span className={styles.links_name}>Carregamento</span>
                 </Link>
               </li>
 
+              {/* <li className={styles.subItem}>
+                <Link to="/ranking_expedicao">
+                  <i className="bx bx-right-arrow"></i>
+                  <span className={styles.links_name}>Ranking Expedicao</span>
+                </Link>
+              </li> */}
 
               {/* <li className={styles.subItem}>
                 <Link to="/jirau">
@@ -99,9 +117,7 @@ export const Sidebar = () => {
               <span className={styles.arrow_toggle}>
                 <i
                   className={`bx ${
-                    openCard === "sac"
-                      ? "bx-chevron-up"
-                      : "bx-chevron-down"
+                    openCard === "sac" ? "bx-chevron-up" : "bx-chevron-down"
                   }`}
                 ></i>
               </span>
@@ -150,7 +166,9 @@ export const Sidebar = () => {
               <span className={styles.arrow_toggle}>
                 <i
                   className={`bx ${
-                    openCard === "monitoramento" ? "bx-chevron-up" : "bx-chevron-down"
+                    openCard === "monitoramento"
+                      ? "bx-chevron-up"
+                      : "bx-chevron-down"
                   }`}
                 ></i>
               </span>

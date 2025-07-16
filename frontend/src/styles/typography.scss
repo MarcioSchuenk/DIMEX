@@ -1,0 +1,115 @@
+%title {
+    font-weight: 700;
+    color: white;
+}
+%headline {
+    font-weight: 600;
+    color: white;
+}
+
+%subtitle {
+    font-weight: 400;
+    color: white;
+    line-height: 22px;
+    letter-spacing: 0.1px;
+}
+
+%body {
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    color: white;
+}
+
+%button {
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 2px;
+    color: white;
+}
+
+%overline {
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 1.5px;
+    color: white;
+}
+
+.tittle1 {
+    @extend %title;
+    font-size: 96px;
+}
+
+.tittle2 {
+    @extend %title;
+    font-size: 60px;
+}
+
+.tittle3 {
+    @extend %title;
+    font-size: 48px;
+}
+
+.headline1 {
+    @extend %headline;
+    font-size: 34px;
+}
+
+.headline2 {
+    @extend %headline;
+    font-size: 24px;
+}
+
+.headline3 {
+    @extend %headline;
+    font-size: 20px;
+}
+
+.subtitle1 {
+    @extend %subtitle;
+    font-size: 16px;
+}
+
+.subtitle2.bold {
+    @extend %subtitle;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.body1 {
+    @extend %body;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.body2 {
+    @extend %body;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.body3 {
+    @extend %body;
+    font-size: 14px;
+}
+
+.body4 {
+    @extend %body;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.button1 {
+    @extend %button;
+    font-size: 16px;
+}
+
+.button2 {
+    @extend %button;
+    font-size: 14px;
+}
+
+.overline {
+    @extend %overline;
+    font-size: 12px;
+}
