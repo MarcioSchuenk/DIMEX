@@ -32,15 +32,17 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Precisamos acessar sua câmera para fotografar documentos e comprovantes",
         "NSPhotoLibraryUsageDescription": "Precisamos acessar sua galeria para selecionar imagens de documentos",
-        "NSPhotoLibraryAddUsageDescription": "Precisamos salvar fotos tiradas no aplicativo"
-      }
+        "NSPhotoLibraryAddUsageDescription": "Precisamos salvar fotos tiradas no aplicativo",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.marcio.schuenk.snack6410b457cf1445cdaf0b1ce416e5d75e"
     },
     "android": {
       "usesCleartextTraffic": true,
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.RECORD_AUDIO"
       ],
       "adaptiveIcon": {
