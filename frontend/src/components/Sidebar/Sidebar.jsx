@@ -178,7 +178,7 @@ export const Sidebar = () => {
 
           <li onClick={() => toggleCard("DP")}>
             <a onClick={!isActive ? toggleSidebar : undefined}>
-              <i class="bx  bx-group"></i>
+              <i className="bx bx-group"></i>
               <span className={styles.links_name}>DP</span>
               <span className={styles.arrow_toggle}>
                 <i

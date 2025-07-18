@@ -7,7 +7,7 @@ import { SalaNobrePage } from "../pages/SalaNobrePage";
 import { PontosPage } from "../pages/PontosPage";
 // import { ColaboradoresPage } from "../pages/ColaboradoresPage";
 import { MaintenancePage } from "../pages/MaintenancePage";
-import { RankingExpedicaoPage } from "../pages/RankingExpedicaoPage";
+// import { RankingExpedicaoPage } from "../pages/RankingExpedicaoPage";
 import { SeparacaoJirauPage } from "../pages/SeparacaoJirauPage";
 
 export const RoutesMain = () => {
@@ -17,7 +17,7 @@ export const RoutesMain = () => {
       <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<MainPage />}>
           <Route path="/seperacao_jirau" element={<SeparacaoJirauPage />} />
-          <Route path="/ranking_expedicao" element={<RankingExpedicaoPage />} />
+          {/* <Route path="/ranking_expedicao" element={<RankingExpedicaoPage />} /> */}
           <Route path="/fluxo_nobre" element={<SalaNobrePage />} />
           {/* <Route path="/sobras" element={<SobrasPage />} /> */}
           <Route path="ponto" element={<PontosPage />} />
