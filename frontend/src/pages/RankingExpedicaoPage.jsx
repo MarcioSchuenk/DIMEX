@@ -1,9 +1,9 @@
-import { RankingExpedicaoMain } from "../components/RankingExpedicao/RankingExpedicaoMain/RankingExpedicaoMain.JSX";
+// import { RankingExpedicaoMain } from "../components/RankingExpedicao/RankingExpedicaoMain/RankingExpedicaoMain.JSX";
 
-export const RankingExpedicaoPage = () => {
-  return (
-    <div>
-      <RankingExpedicaoMain />
-    </div>
-  );
-};
+// export const RankingExpedicaoPage = () => {
+//   return (
+//     <div>
+//       <RankingExpedicaoMain />
+//     </div>
+//   );
+// };
