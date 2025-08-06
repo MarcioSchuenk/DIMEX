@@ -29,11 +29,11 @@ export const SeparacaoJirauMain = () => {
     <div>
       <h1 className="tittle3">Separação Jirau</h1>
       <p>Realize a separação dos pedidos utilizando o crachá e o número do pedido.</p>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input placeholder="Bipe o crachá" {...register("cracha")} />
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <input placeholder="Bipe o crachá" {...register("cracha")} className={styles.inputCracha}/>
         {errors.cracha && <p>{errors.cracha.message}</p>}
     
-        <input placeholder="Bipe o Pedido" {...register("pedido")} />
+        <input placeholder="Bipe o Pedido" {...register("pedido")} className={styles.inputPedido}/>
         {errors.pedido && <p>{errors.pedido.message}</p>}
 
         <button type="submit">Enviar</button>

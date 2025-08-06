@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SobrasServices } from "../services/sobras.services";
+import { SobrasServices } from "../services/dimex/sobras.services";
 import { container } from "tsyringe";
 
 export class SobrasController {

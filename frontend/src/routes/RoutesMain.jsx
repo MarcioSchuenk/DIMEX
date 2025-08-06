@@ -9,6 +9,7 @@ import { PontosPage } from "../pages/PontosPage";
 import { MaintenancePage } from "../pages/MaintenancePage";
 // import { RankingExpedicaoPage } from "../pages/RankingExpedicaoPage";
 import { SeparacaoJirauPage } from "../pages/SeparacaoJirauPage";
+import { SettingsPage } from "../pages/SettingsPage";
 
 export const RoutesMain = () => {
   return (
@@ -23,6 +24,7 @@ export const RoutesMain = () => {
           <Route path="ponto" element={<PontosPage />} />
           <Route path="maintenance" element={<MaintenancePage />} />
           {/* <Route path="jirau" element={<ColaboradoresPage />} /> */}
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Route>
     </Routes>

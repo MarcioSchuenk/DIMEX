@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, use } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../config/firebase.config";
+import { auth, db } from "../config/firebase.config";
+import { doc, getDoc } from "firebase/firestore";
 import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
@@ -8,16 +9,18 @@ import {
   setPersistence,
   browserLocalPersistence,
 } from "firebase/auth";
+import { set } from "zod";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // garante que app só renderize depois do Firebase verificar
+  const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       const expiresAt = localStorage.getItem("expiresAt");
 
       if (firebaseUser && expiresAt) {
@@ -26,14 +29,27 @@ export const AuthProvider = ({ children }) => {
 
         if (now < expiresDate) {
           setUser(firebaseUser);
+
+          try {
+            const userDc = await getDoc(doc(db, "users", firebaseUser.uid));
+            if (userDc.exists()) {
+              const data = userDc.data();
+              setRole(data.role);
+            } else {
+              setRole("user");
+            }
+          } catch (error) {
+            console.error("Erro ao buscar role:", error);
+          }
         } else {
           logout();
         }
       } else {
         setUser(null);
+        setRole(null);
       }
 
-      setLoading(false); // fim da checagem
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -41,7 +57,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async ({ login, password }) => {
     try {
-      await setPersistence(auth, browserLocalPersistence); // mantém sessão mesmo com F5 ou fechamento
+      await setPersistence(auth, browserLocalPersistence);
 
       const { user: firebaseUser } = await signInWithEmailAndPassword(
         auth,
@@ -68,10 +84,10 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
   };
 
-  if (loading) return null; // ou um spinner de carregamento
+  if (loading) return null; 
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, role, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

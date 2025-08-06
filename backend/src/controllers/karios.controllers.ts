@@ -1,4 +1,4 @@
-import { buscarFuncionariosKairos, buscarPontosKairos } from "../services/kairos.services";
+import { buscarFuncionariosKairos, buscarPontosKairos } from "../services/dimex/kairos.services";
 import { Request, Response } from "express";
 import dayjs from "dayjs";
 

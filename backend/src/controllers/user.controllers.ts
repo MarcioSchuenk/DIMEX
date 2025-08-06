@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UserServices } from "../services/user.services";
+import { UserServices } from "../services/dimex/user.services";
 import { container } from "tsyringe";
 export class UserControllers {
   async createUser(req: Request, res: Response) {

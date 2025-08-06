@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SalaNobreServices } from "../services/salanobre.services";
+import { SalaNobreServices } from "../services/dimex/salanobre.services";
 import { container } from "tsyringe";
 import { getIO } from "../ws"; // 👈 importa WebSocket
 

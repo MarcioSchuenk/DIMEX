@@ -5,10 +5,13 @@ import profile from "../../assets/profile.png";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { IoSettingsOutline } from "react-icons/io5";
+import { useAuth } from "../../context/AuthContext";
 
 export const Sidebar = () => {
   const [isActive, setIsActive] = useState(false);
   const [openCard, setOpenCard] = useState(null);
+  const { user, role } = useAuth();
 
   const toggleSidebar = () => {
     setIsActive(!isActive);
@@ -59,7 +62,6 @@ export const Sidebar = () => {
                   <span className={styles.links_name}>Separação Jirau</span>
                 </Link>
               </li>
-              
               <li className={styles.subItem}>
                 <Link to="/fluxo_nobre">
                   <i className="bx bx-right-arrow"></i>
@@ -109,7 +111,7 @@ export const Sidebar = () => {
             </>
           )}
 
-          {/* Rodoviário */}
+          {/* Sac */}
           <li onClick={() => toggleCard("sac")}>
             <a onClick={!isActive ? toggleSidebar : undefined}>
               <i className="bx bx-map"></i>
@@ -200,8 +202,17 @@ export const Sidebar = () => {
               </li>
             </>
           )}
+          {role === "admin" && (
+            <li>
+              <Link to="/settings">
+                <i>
+                  <IoSettingsOutline />
+                </i>
+                <span className={styles.links_name}>Settings</span>
+              </Link>
+            </li>
+          )}
         </ul>
-
         <div className={styles.profile_content}>
           <div className={styles.profile}>
             <div className={styles.profile_details}>
