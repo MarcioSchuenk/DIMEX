@@ -1,0 +1,248 @@
+generator cplus_client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/@prisma/client-cplus"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_CPLUS")
+}
+
+model motorista {
+  id                String              @id(map: "PK_motorista") @db.Uuid
+  datadecadastro    DateTime?           @db.Timestamp(6)
+  cnh               String?
+  categoriadacnh    Int?                @db.SmallInt
+  pessoa            pessoa              @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_motorista_pessoa_id")
+}
+
+model pessoa {
+  id                                                                                               String                                 @id(map: "PK_pessoa") @db.Uuid
+  nome                                                                                             String?                                @db.VarChar(255)
+  inscricaoestadual                                                                                String?                                @db.VarChar(20)
+  inativa                                                                                          Boolean
+  diasparaprotestocobrancabancaria                                                                 Int?
+  datadaultimaalteracao                                                                            DateTime?                              @db.Timestamp(6)
+  idenderecoprincipal                                                                              String?                                @db.Uuid
+  logradouro                                                                                       String?                                @db.VarChar(400)
+  numerologradouro                                                                                 String?                                @db.VarChar(400)
+  complemento                                                                                      String?                                @db.VarChar(400)
+  referencia                                                                                       String?                                @db.VarChar(400)
+  bairro                                                                                           String?                                @db.VarChar(400)
+  idpais                                                                                           String?                                @db.Uuid
+  idmunicipio                                                                                      String?                                @db.Uuid
+  nomemunicipio                                                                                    String?                                @db.VarChar(255)
+  iduf                                                                                             String?                                @db.Uuid
+  cep                                                                                              String?                                @db.VarChar(8)
+  latitude                                                                                         Float?
+  longitude                                                                                        Float?
+  idrotadeentrega                                                                                  String?                                @db.Uuid
+  idenderecodeentregapadrao                                                                        String?                                @db.Uuid
+  idenderecodecobrancapadrao                                                                       String?                                @db.Uuid
+  telefoneprincipal                                                                                String?                                @db.VarChar(50)
+  celularprincipal                                                                                 String?
+  nomefantasia                                                                                     String?                                @db.VarChar(255)
+  emailprincipal                                                                                   String?                                @db.VarChar(255)
+  site                                                                                             String?                                @db.VarChar(400)
+  observacao                                                                                       String?                                @db.VarChar(20000)
+  referenciabancaria                                                                               String?                                @db.VarChar(400)
+  emaildanfe                                                                                       String?                                @db.VarChar(255)
+  getnumerodocumentoreceitafederal                                                                 String?                                @db.VarChar(400)
+  tipodepessoa                                                                                     Int                                    @db.SmallInt
+  indicadordeie                                                                                    Int?                                   @db.SmallInt
+  idperfiltributario                                                                               String?                                @db.Uuid
+  idbanco                                                                                          String?                                @db.Uuid
+  numerodaagencia                                                                                  String?                                @db.VarChar(15)
+  numerodaagenciadv                                                                                String?                                @db.VarChar(1)
+  numerodaconta                                                                                    String?                                @db.VarChar(15)
+  numerodacontadv                                                                                  String?                                @db.VarChar(1)
+  codigo                                                                                           String?                                @unique(map: "UK_Pessoa_Codigo") @db.VarChar(20)
+  idusuarioqueefetuoulancamento                                                                    String?                                @db.Uuid
+  idsegmentopessoa                                                                                 String?                                @db.Uuid
+  idfoto                                                                                           String?                                @db.Uuid
+  tipodechavepix                                                                                   Int?                                   @db.SmallInt
+  chavepix                                                                                         String?
+  discriminator                                                                                    String                                 @db.VarChar(21)
+  identificacaoestrangeiro                                                                         String?                                @db.VarChar(20)
+  cpf                                                                                              String?                                @db.VarChar(14)
+  rg                                                                                               String?                                @db.VarChar(20)
+  sexo                                                                                             Int?                                   @db.SmallInt
+  datadenascimento                                                                                 DateTime?                              @db.Timestamp(6)
+  estadocivil                                                                                      Int?                                   @db.SmallInt
+  naturalidade                                                                                     String?
+  conjuge                                                                                          String?
+  nomedopai                                                                                        String?
+  nomedamae                                                                                        String?
+  profissao                                                                                        String?
+  rendamensal                                                                                      Decimal?                               @db.Decimal(18, 2)
+  cnpj                                                                                             String?                                @db.VarChar(14)
+  inscricaosuframa                                                                                 String?                                @db.VarChar(30)
+  inscricaomunicipal                                                                               String?                                @db.VarChar(20)
+  regimetributario                                                                                 Int?                                   @db.SmallInt
+  aliquotadosimplesnacional                                                                        Decimal?                               @db.Decimal(18, 2)
+  datadafundacao                                                                                   DateTime?                              @db.Timestamp(6)
+  dataultimaconsultaradarcnpj                                                                      DateTime?                              @db.Timestamp(6)
+  ultimaconsultaradarcnpj                                                                          String?
+  motorista                                                                                        motorista?
+  pontodeparada                                                                                    pontodeparada[]
+  romaneiodeentrega_romaneiodeentrega_idmotoristaTopessoa                                          romaneiodeentrega[]                    @relation("romaneiodeentrega_idmotoristaTopessoa")
+  romaneiodeentrega_romaneiodeentrega_idajudanteTopessoa                                           romaneiodeentrega[]                    @relation("romaneiodeentrega_idajudanteTopessoa")
+  romaneiodeentrega_romaneiodeentrega_idsegundoajudanteTopessoa                                    romaneiodeentrega[]                    @relation("romaneiodeentrega_idsegundoajudanteTopessoa")
+
+
+  @@index([cnpj], map: "IX_pessoa_cnpj")
+  @@index([cpf], map: "IX_pessoa_cpf")
+  @@index([emailprincipal], map: "IX_pessoa_emailprincipal")
+  @@index([idbanco], map: "IX_pessoa_idbanco")
+  @@index([idenderecodecobrancapadrao], map: "IX_pessoa_idenderecodecobrancapadrao")
+  @@index([idenderecodeentregapadrao], map: "IX_pessoa_idenderecodeentregapadrao")
+  @@index([idenderecoprincipal], map: "IX_pessoa_idenderecoprincipal")
+  @@index([identificacaoestrangeiro], map: "IX_pessoa_identificacaoestrangeiro")
+  @@index([idfoto], map: "IX_pessoa_idfoto")
+  @@index([idmunicipio], map: "IX_pessoa_idmunicipio")
+  @@index([idpais], map: "IX_pessoa_idpais")
+  @@index([idperfiltributario], map: "IX_pessoa_idperfiltributario")
+  @@index([idrotadeentrega], map: "IX_pessoa_idrotadeentrega")
+  @@index([idsegmentopessoa], map: "IX_pessoa_idsegmentopessoa")
+  @@index([iduf], map: "IX_pessoa_iduf")
+  @@index([idusuarioqueefetuoulancamento], map: "IX_pessoa_idusuarioqueefetuoulancamento")
+  @@index([inscricaoestadual], map: "IX_pessoa_inscricaoestadual")
+  @@index([inscricaomunicipal], map: "IX_pessoa_inscricaomunicipal")
+  @@index([inscricaosuframa], map: "IX_pessoa_inscricaosuframa")
+  @@index([nome], map: "IX_pessoa_nome")
+  @@index([numerodaagencia], map: "IX_pessoa_numerodaagencia")
+  @@index([numerodaconta], map: "IX_pessoa_numerodaconta")
+  @@index([rg], map: "IX_pessoa_rg")
+  @@index([telefoneprincipal], map: "IX_pessoa_telefoneprincipal")
+}
+
+
+model veiculo {
+  id                      String              @id(map: "PK_veiculo") @db.Uuid
+  idtransportadora        String?             @db.Uuid
+  codigo                  String?             @unique(map: "UK_Veiculo_Codigo") @db.VarChar(20)
+  modelo                  String?
+  renavam                 String?
+  placa                   String?
+  iduf                    String              @db.Uuid
+  tara                    Int
+  capacidadeemkg          Int
+  capacidadeemmetrocubico Int
+  tipodoveiculo           Int?                @db.SmallInt
+  tipodecarroceria        Int?                @db.SmallInt
+  tipoderodado            Int?                @db.SmallInt
+  romaneiodeentrega       romaneiodeentrega[]
+
+  @@index([idtransportadora], map: "IX_veiculo_idtransportadora")
+  @@index([iduf], map: "IX_veiculo_iduf")
+}
+
+model itemdoromaneiodeentrega {
+  id                           String              @id(map: "PK_itemdoromaneiodeentrega") @db.Uuid
+  ordem                        Int
+  idromaneiodeentrega          String              @db.Uuid
+  idordemdeentrega             String?             @db.Uuid
+  idsaida                      String?             @db.Uuid
+  idpontodeparada              String?             @db.Uuid
+  longitudedamarcacaodechegada Float
+  latitudedamarcacaodechegada  Float
+  status                       Int
+  motivodanaoentrega           String?
+  iddocumentodoarmazem         String?             @db.Uuid
+  tipodocumentoentrega         Int                 @default(0)
+  pontodeparada                pontodeparada?      @relation(fields: [idpontodeparada], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_itemdoromaneiodeentrega_pontodeparada_idpontodeparada")
+  romaneiodeentrega            romaneiodeentrega   @relation(fields: [idromaneiodeentrega], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_itemdoromaneiodeentrega_romaneiodeentrega_idromaneiodeentre~")
+
+  @@index([iddocumentodoarmazem], map: "IX_itemdoromaneiodeentrega_iddocumentodoarmazem")
+  @@index([idordemdeentrega], map: "IX_itemdoromaneiodeentrega_idordemdeentrega")
+  @@index([idpontodeparada], map: "IX_itemdoromaneiodeentrega_idpontodeparada")
+  @@index([idromaneiodeentrega], map: "IX_itemdoromaneiodeentrega_idromaneiodeentrega")
+  @@index([idsaida], map: "IX_itemdoromaneiodeentrega_idsaida")
+}
+
+model pontodeparada {
+  id                              String                    @id(map: "PK_pontodeparada") @db.Uuid
+  tipodeparada                    Int
+  idpessoa                        String?                   @db.Uuid
+  distancia                       Float
+  ordemdeentrega                  Int
+  possuiprodutovalioso            Boolean
+  pesototalemkg                   Decimal                   @db.Decimal(18, 2)
+  volumetotalemmetrocubico        Decimal                   @db.Decimal(18, 2)
+  previsaodechegada               DateTime?                 @db.Timestamp(6)
+  idromaneiodeentrega             String                    @db.Uuid
+  origemdoenderecodopontodeparada Int?
+  statusdaentrega                 Int
+  tipologradouro                  String?
+  logradouro                      String?
+  numero                          String?
+  cep                             String?
+  complemento                     String?
+  bairro                          String?
+  idmunicipio                     String?                   @db.Uuid
+  iduf                            String?                   @db.Uuid
+  idrotadeentrega                 String?                   @db.Uuid
+  referencia                      String?
+  latitude                        Float?
+  longitude                       Float?
+  dadosdarotajson                 String?
+  duracao                         Float
+  observacaointerna               String?
+  enderecocompleto                String?
+  idtagdoroteiro                  String?                   @db.Uuid
+  datadapartida                   DateTime?                 @db.Timestamp(6)
+  datadocheckin                   DateTime?                 @db.Timestamp(6)
+  datadocheckout                  DateTime?                 @db.Timestamp(6)
+  finalizadocomdivergencia        Boolean                   @default(false)
+  latitudedocheckin               Float?
+  latitudedocheckout              Float?
+  longitudedocheckin              Float?
+  longitudedocheckout             Float?
+  observacao                      String?
+  tempoestimado                   Unsupported("interval")   @default(dbgenerated("'00:00:00'::interval"))
+  itemdoromaneiodeentrega         itemdoromaneiodeentrega[]
+  pessoa                          pessoa?                   @relation(fields: [idpessoa], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_pontodeparada_pessoa_idpessoa")
+  romaneiodeentrega               romaneiodeentrega         @relation(fields: [idromaneiodeentrega], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_pontodeparada_romaneiodeentrega_idromaneiodeentrega")
+
+  @@index([idmunicipio], map: "IX_pontodeparada_idmunicipio")
+  @@index([idpessoa], map: "IX_pontodeparada_idpessoa")
+  @@index([idromaneiodeentrega], map: "IX_pontodeparada_idromaneiodeentrega")
+  @@index([idrotadeentrega], map: "IX_pontodeparada_idrotadeentrega")
+  @@index([idtagdoroteiro], map: "IX_pontodeparada_idtagdoroteiro")
+  @@index([iduf], map: "IX_pontodeparada_iduf")
+}
+
+model romaneiodeentrega {
+  id                                                 String                    @id(map: "PK_romaneiodeentrega") @db.Uuid
+  dataprevistasaida                                  DateTime?                 @db.Timestamp(6)
+  datadoretorno                                      DateTime?                 @db.Timestamp(6)
+  observacoes                                        String?
+  idempresa                                          String                    @db.Uuid
+  idmotorista                                        String?                   @db.Uuid
+  idajudante                                         String?                   @db.Uuid
+  idsegundoajudante                                  String?                   @db.Uuid
+  status                                             Int
+  idtransportadora                                   String?                   @db.Uuid
+  idveiculo                                          String?                   @db.Uuid
+  statusdocarregamento                               Int
+  tempoderetorno                                     Unsupported("interval")   @default(dbgenerated("'00:00:00'::interval"))
+  numerodejornadas                                   Int
+  tempoextradoroteiroemminutos                       Int
+  tempomediodeparadaparaentregaemminutos             Int
+  datadocadastro                                     DateTime?                 @db.Timestamp(6)
+  datafinalizacaocarregamento                        DateTime?                 @db.Timestamp(6)
+  datainiciocarregamento                             DateTime?                 @db.Timestamp(6)
+  filtro                                             String?
+  idtagdoroteiro                                     String?                   @db.Uuid
+  roteirizado                                        Boolean                   @default(false)
+  itemdoromaneiodeentrega                            itemdoromaneiodeentrega[]
+  pontodeparada                                      pontodeparada[]
+  
+
+  pessoa_romaneiodeentrega_idajudanteTopessoa        pessoa?                   @relation("romaneiodeentrega_idajudanteTopessoa", fields: [idajudante], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_romaneiodeentrega_pessoa_idajudante")
+  pessoa_romaneiodeentrega_idmotoristaTopessoa       pessoa?                   @relation("romaneiodeentrega_idmotoristaTopessoa", fields: [idmotorista], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_romaneiodeentrega_pessoa_idmotorista")
+  pessoa_romaneiodeentrega_idsegundoajudanteTopessoa pessoa?                   @relation("romaneiodeentrega_idsegundoajudanteTopessoa", fields: [idsegundoajudante], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_romaneiodeentrega_pessoa_idsegundoajudante")
+  veiculo                                            veiculo?                  @relation(fields: [idveiculo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_romaneiodeentrega_veiculo_idveiculo")
+
+}
+

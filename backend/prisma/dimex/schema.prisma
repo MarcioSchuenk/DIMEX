@@ -1,0 +1,92 @@
+generator dimex_client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/@prisma/client-dimex"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+
+}
+
+enum Role {
+  USER
+  ADMIN
+  NOBRE
+}
+
+model User {
+  id         Int   @id @default(autoincrement())
+  login      String @unique
+  password  String
+  role Role @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Sobras {
+  id               Int   @id @default(autoincrement())
+  codigo           String?
+  quantidade       Int?
+  pedido_cancelado String?
+  localizacao      String?
+  onde_qual        String?
+  quadrante        String?
+  description      String?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}
+
+model Caixas {
+  id               Int   @id @default(autoincrement())
+  codigo           String?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}
+
+
+// model Pedido {
+//   id               Int   @id @default(autoincrement())
+//   codigo           Int @unique
+//   created_at       DateTime @default(now())
+//   updated_at       DateTime @updatedAt
+
+//   separacoesJirau  SeparacaoJirau[]
+//   separacoesRua    SeparacaoRua[]
+//   salasNobre       SalaNobre[]
+// }
+
+// model SeparacaoJirau {
+//   id               Int   @id @default(autoincrement())
+//   pedidoId         Int
+//   cracha           Int
+//   jirau1           String?
+//   jirau2           String?
+//   jirau3           String?
+//   created_at       DateTime @default(now())
+//   updated_at       DateTime @updatedAt
+
+//   pedido           Pedido   @relation(fields: [pedidoId], references: [id])
+// }
+
+// model SeparacaoRua {
+//   id               Int   @id @default(autoincrement())
+//   pedidoId         Int
+//   cracha           Int
+//   usuarioIniciador String?
+//   usuarioFinalizador     String?
+//   created_at       DateTime @default(now())
+//   updated_at       DateTime @updatedAt
+
+//   pedido           Pedido   @relation(fields: [pedidoId], references: [id])
+// }
+
+// model SalaNobre{
+//   id               Int   @id @default(autoincrement())
+//   pedidoId         Int
+//   cracha           Int
+//   created_at       DateTime @default(now())
+//   updated_at       DateTime @updatedAt
+
+//   pedido           Pedido   @relation(fields: [pedidoId], references: [id])
+// }
